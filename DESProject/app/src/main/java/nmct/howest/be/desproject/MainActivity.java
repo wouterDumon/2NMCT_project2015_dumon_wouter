@@ -66,13 +66,14 @@ private GoogleMap Gmap;
     public void onMapReady(GoogleMap map) {
         Gmap = map;
        LatLng Testdata = new LatLng(50.806905141279,3.3014492766399);
-
+        map.getUiSettings().setZoomGesturesEnabled(true);
+        map.getUiSettings().setZoomControlsEnabled(true);
         map.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(Testdata, 5));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(Testdata, 11));
         for(String[] array : Lijstje){
             Double X = Double.parseDouble(array[6]);
             Double Y = Double.parseDouble(array[7]);
-            LatLng Positie = new LatLng(X,Y);
+            LatLng Positie = new LatLng(Y,X);
             map.addMarker(new MarkerOptions()
                     .title(""+array[0])
                     .snippet("klik hier voor meer info")

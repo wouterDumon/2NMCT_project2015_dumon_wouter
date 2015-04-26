@@ -79,28 +79,28 @@ public List<String[]> Lijst = new ArrayList<String[]>();
                     while (reader.hasNext()) {
                         String name = reader.nextName();
                         if (name.equals("benaming")) {
-                            reader.nextString();
+                          benaming =  reader.nextString();
                         }  else if (name.equals("adres")) {
-                        reader.nextString();
+                       Adres =  reader.nextString();
                     }else if (name.equals("gemeente")) {
-                            reader.nextString();
+                           Gemeente = reader.nextString();
                         }else if (name.equals("soort")) {
-                            reader.nextString();
+                       Soort =     reader.nextString();
                         }else if (name.equals("sport")) {
-                            reader.nextString();
+                           Sport =  reader.nextString();
                         }else if (name.equals("afmetingen")) {
-                            reader.nextString();
+                           Afmeting =  reader.nextString();
                         }else if (name.equals("y")) {
                             if (reader.peek().equals(JsonToken.NULL)) {
                                 reader.skipValue();
                             } else if (reader.peek().equals(JsonToken.NUMBER)) {
-                                reader.nextDouble();
+                              Y =  reader.nextDouble();
                             }
                         }else if (name.equals("x")) {
                             if (reader.peek().equals(JsonToken.NULL)) {
                                 reader.skipValue();
                             } else if (reader.peek().equals(JsonToken.NUMBER)) {
-                                reader.nextDouble();
+                               X =  reader.nextDouble();
                             }
                         }else{
                             reader.skipValue();
