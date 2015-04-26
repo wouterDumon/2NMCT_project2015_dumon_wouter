@@ -1,6 +1,10 @@
 package nmct.howest.be.desproject;
 
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.Context;
+import android.content.Loader;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -8,7 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SimpleCursorAdapter;
 
+import java.util.List;
+
+import nmct.howest.be.desproject.loader.Contract;
+import nmct.howest.be.desproject.loader.SportcentraLoader;
 
 
 public class MainFragment extends Fragment {
@@ -83,12 +92,38 @@ Button ChangeFrag = (Button)v.findViewById(R.id.btnChangeToFragmentMap);
         }
     }
 
+
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
+
+  /*  private  SportCentraAdapter madapter;
+    class SportCentraAdapter extends SimpleCursorAdapter {
+        public SportCentraAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
+            super(context, layout, c, from, to, flags);
+
+
+
+        }
+
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+
+            super.bindView(view, context, cursor);
+            String benaming = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_BENAMING));
+            String Adres = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_ADRES));
+            String Gemeente = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_GEMEENTE));
+            String Soort = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_SOORT));
+            String Sport = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_SPORT));
+            String Afmeting = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_AFMETINGEN));
+            double X = cursor.getDouble(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_X));
+            double Y = cursor.getDouble(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_Y));
+        }
+    }*/
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
