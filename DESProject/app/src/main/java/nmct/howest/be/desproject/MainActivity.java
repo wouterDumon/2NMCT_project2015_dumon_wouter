@@ -13,13 +13,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
@@ -28,7 +31,7 @@ import nmct.howest.be.desproject.loader.Contract;
 import nmct.howest.be.desproject.loader.SportcentraLoader;
 
 
-public class MainActivity extends Activity implements OnMapReadyCallback,MainFragment.OnFragmentInteractionListener, ShowMapFragment.OnFragmentInteractionListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends Activity implements OnMapReadyCallback,MainFragment.OnFragmentInteractionListener, ShowMapFragment.OnFragmentInteractionListener, LoaderManager.LoaderCallbacks<Cursor>, GoogleMap.OnInfoWindowClickListener, DetailFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,7 @@ private GoogleMap Gmap;
        LatLng Testdata = new LatLng(50.806905141279,3.3014492766399);
         map.getUiSettings().setZoomGesturesEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
+        map.setOnInfoWindowClickListener(this);
         map.setMyLocationEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(Testdata, 11));
         for(String[] array : Lijstje){
@@ -75,7 +79,7 @@ private GoogleMap Gmap;
             Double Y = Double.parseDouble(array[7]);
             LatLng Positie = new LatLng(Y,X);
             map.addMarker(new MarkerOptions()
-                    .title(""+array[0])
+                    .title("" + array[0])
                     .snippet("klik hier voor meer info")
                     .position(Positie));
 
@@ -118,4 +122,31 @@ private GoogleMap Gmap;
         //madapter.swapCursor(null);
     }
 
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        showFragmentDetails(marker.getTitle());
+       // Toast.makeText(this, marker.getTitle(), Toast.LENGTH_LONG).show();
+
     }
+
+    private void showFragmentDetails(String title) {
+       /* requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+
+        setProgressBarIndeterminateVisibility(true);
+        setProgressBarVisibility(true);*/
+      //  setContentView(R.layout.activity_main);
+        Fragment newFrag = new DetailFragment().newInstance(title,Lijstje);
+        FragmentManager fMgr = getFragmentManager();
+        FragmentTransaction fTr = fMgr.beginTransaction();
+
+        fTr.replace(R.id.container, newFrag);
+        fTr.addToBackStack("Mapfrag");
+        fTr.commit();
+    }
+
+    @Override
+    public void onFragmentInteraction() {
+
+    }
+}
