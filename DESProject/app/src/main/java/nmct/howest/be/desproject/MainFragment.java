@@ -8,12 +8,17 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import nmct.howest.be.desproject.loader.Contract;
@@ -23,7 +28,7 @@ import nmct.howest.be.desproject.loader.SportcentraLoader;
 public class MainFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
+    private static List<String[]> ARG_PARAM1 = new ArrayList<String[]>();
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
@@ -34,12 +39,9 @@ public class MainFragment extends Fragment {
 
 
     // TODO: Rename and change types and number of parameters
-    public static MainFragment newInstance(String param1, String param2) {
+    public static MainFragment newInstance(List<String[]> param1) {
         MainFragment fragment = new MainFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+   ARG_PARAM1 = param1;
         return fragment;
 
     }
@@ -51,10 +53,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
@@ -70,16 +69,23 @@ Button ChangeFrag = (Button)v.findViewById(R.id.btnChangeToFragmentMap);
         mListener.onFragmentInteraction(1);
     }
 });
+ArrayList<String> Sporten = new ArrayList<String>();
+     //   Sporten.add("test");
+        MainAdapter adapter = new MainAdapter(getActivity(),0,Sporten);
+        for(String[] arr : ARG_PARAM1){
+    if(Sporten.contains(arr[4])){}else{
+        Sporten.add(arr[4]);
+        adapter.add(arr[4]);
+    }
+
+}
+        ListView listView = (ListView) v.findViewById(R.id.MijnMainLijst);
+        listView.setAdapter(adapter);
 
     return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-       //     mListener.onFragmentInteraction(uri);
-        }
-    }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -138,5 +144,57 @@ Button ChangeFrag = (Button)v.findViewById(R.id.btnChangeToFragmentMap);
         // TODO: Update argument type and name
         public void onFragmentInteraction(int page);
     }
+
+
+
+    ///
+    public class MainAdapter extends ArrayAdapter<String> {
+        public MainAdapter(Context context, int resource, ArrayList<String> arr) {
+            super(context, resource,arr);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            // Get the data item for this position
+            //  User user = getItem(position);
+            // Check if an existing view is being reused, otherwise inflate the view
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_main, parent, false);
+            }
+            // Lookup view for data population
+            //   TextView tvName = (TextView) convertView.findViewById(R.id.txtBenaming);
+            ViewHolder holder = (ViewHolder)convertView.getTag();
+            if(holder == null){
+                holder = new ViewHolder(convertView);
+                convertView.setTag(holder);
+            }
+
+
+            String array = getItem(position);
+            if(array !="") {
+              /*  holder.afmetingen.setText("" + array[5]);
+                holder.Adres.setText("" + array[1]);
+                holder.Gemeente.setText("" + array[2]);
+                holder.Soort.setText("" + array[3]);
+                holder.Sport.setText("" + array[4]);*/
+                holder.SoortSpport.setText(""+array);
+            }
+            return convertView;
+        }
+    }
+
+    class ViewHolder{
+        //  public ImageView imgicon = null;
+        public TextView SoortSpport = null;
+        public ViewHolder(View row){
+            //this.benaming=(TextView)row.findViewById(R.id.txtSport);
+            this.SoortSpport = (TextView)row.findViewById(R.id.txtSoortSp);
+
+
+        }
+
+    }
+
+
 
 }

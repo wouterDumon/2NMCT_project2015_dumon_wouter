@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.LoaderManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Loader;
 import android.database.Cursor;
@@ -32,23 +33,40 @@ import nmct.howest.be.desproject.loader.SportcentraLoader;
 
 
 public class MainActivity extends Activity implements OnMapReadyCallback,MainFragment.OnFragmentInteractionListener, ShowMapFragment.OnFragmentInteractionListener, LoaderManager.LoaderCallbacks<Cursor>, GoogleMap.OnInfoWindowClickListener, DetailFragment.OnFragmentInteractionListener {
-
+    ProgressDialog progress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if(savedInstanceState == null) {
-
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            MainFragment fragment1 = new MainFragment();
-            //parameters:
-            //1: ID container
-            //2: fragment
-            //3: Optional tag name for the fragment, to later retrieve the fragment with FragmentManager.findFragmentByTag(String).
-            fragmentTransaction.add(R.id.container, fragment1, "mainfrag"); //VERPLICHT DIT TE ZETTEN ANDERS ZAL HIJ NULL FOUT GEVEN
-            fragmentTransaction.commit();
-            getLoaderManager().initLoader(0,null,this);
+            progress = ProgressDialog.show(this, "Even geduld",
+                    "Bezig met het ophalen van data", true);
+            new Thread(new Runnable() {
+                @Override
+                public void run()
+                {
+                    // do the thing that takes a long time
+                //   a = new SportcentraLoader(MainActivity.this);
+getLoaderManager().initLoader(0,null,MainActivity.this);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run()
+                        {
+                            Lijstje = a.getLijst();
+                            progress.dismiss();
+                            FragmentManager fragmentManager = getFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            MainFragment fragment1 = new MainFragment().newInstance(Lijstje);
+                            //parameters:
+                            //1: ID container
+                            //2: fragment
+                            //3: Optional tag name for the fragment, to later retrieve the fragment with FragmentManager.findFragmentByTag(String).
+                            fragmentTransaction.add(R.id.container, fragment1, "mainfrag"); //VERPLICHT DIT TE ZETTEN ANDERS ZAL HIJ NULL FOUT GEVEN
+                            fragmentTransaction.commit();
+                        }
+                    });
+                }
+            }).start();
         }
     }
 
