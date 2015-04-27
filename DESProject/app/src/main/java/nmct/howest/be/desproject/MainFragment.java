@@ -14,18 +14,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import nmct.howest.be.desproject.loader.Contract;
 import nmct.howest.be.desproject.loader.SportcentraLoader;
 
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static List<String[]> ARG_PARAM1 = new ArrayList<String[]>();
@@ -66,7 +69,7 @@ Button ChangeFrag = (Button)v.findViewById(R.id.btnChangeToFragmentMap);
         ChangeFrag.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-        mListener.onFragmentInteraction(1);
+        mListener.onFragmentInteraction(Switches);
     }
 });
 ArrayList<String> Sporten = new ArrayList<String>();
@@ -75,10 +78,11 @@ ArrayList<String> Sporten = new ArrayList<String>();
         for(String[] arr : ARG_PARAM1){
     if(Sporten.contains(arr[4])){}else{
         Sporten.add(arr[4]);
-        adapter.add(arr[4]);
+      //  adapter.add(arr[4]);
     }
 
 }
+        Collections.sort(Sporten);
         ListView listView = (ListView) v.findViewById(R.id.MijnMainLijst);
         listView.setAdapter(adapter);
 
@@ -106,43 +110,29 @@ ArrayList<String> Sporten = new ArrayList<String>();
         mListener = null;
     }
 
+private ArrayList<String[]> Switches = new ArrayList<String[]>();
+    private String[] PerSwitch = new String[2];
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+String naam = buttonView.getText().toString();
+        int gelijk = 0;
+        for(String[] a : Switches){
 
-  /*  private  SportCentraAdapter madapter;
-    class SportCentraAdapter extends SimpleCursorAdapter {
-        public SportCentraAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
-            super(context, layout, c, from, to, flags);
-
-
-
+            if((a[0].toString().toLowerCase()).equals((naam.toString().toLowerCase()))){gelijk = 1;}
         }
-
-        @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-
-            super.bindView(view, context, cursor);
-            String benaming = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_BENAMING));
-            String Adres = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_ADRES));
-            String Gemeente = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_GEMEENTE));
-            String Soort = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_SOORT));
-            String Sport = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_SPORT));
-            String Afmeting = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_AFMETINGEN));
-            double X = cursor.getDouble(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_X));
-            double Y = cursor.getDouble(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_Y));
+        if(gelijk==0){
+            //indien het er niet inzit
+            PerSwitch[0] = naam;
+            PerSwitch[1] = ""+ isChecked;
+            Switches.add(PerSwitch);
         }
-    }*/
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    }
+
+
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int page);
+        public void onFragmentInteraction(ArrayList<String[]> LijstSwitches);
     }
 
 
@@ -178,6 +168,8 @@ ArrayList<String> Sporten = new ArrayList<String>();
                 holder.Soort.setText("" + array[3]);
                 holder.Sport.setText("" + array[4]);*/
                 holder.SoortSpport.setText(""+array);
+holder.Switch.setText(""+array);
+                holder.Switch.setOnCheckedChangeListener(MainFragment.this);
             }
             return convertView;
         }
@@ -186,9 +178,11 @@ ArrayList<String> Sporten = new ArrayList<String>();
     class ViewHolder{
         //  public ImageView imgicon = null;
         public TextView SoortSpport = null;
+        public Switch Switch = null;
         public ViewHolder(View row){
             //this.benaming=(TextView)row.findViewById(R.id.txtSport);
             this.SoortSpport = (TextView)row.findViewById(R.id.txtSoortSp);
+            this.Switch = (Switch)row.findViewById(R.id.switch1);
 
 
         }

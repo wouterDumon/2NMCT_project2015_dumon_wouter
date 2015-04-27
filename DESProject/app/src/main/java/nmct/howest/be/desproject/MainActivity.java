@@ -26,6 +26,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import nmct.howest.be.desproject.loader.Contract;
@@ -73,9 +75,10 @@ getLoaderManager().initLoader(0,null,MainActivity.this);
 /*
 *
 * */
-private void showFragmentMap(){
-
-    Fragment newFrag = new ShowMapFragment().newInstance("a","v");
+private ArrayList<String[]> empty = new ArrayList<String[]>();
+ private void showFragmentMap(ArrayList<String[]> Lijst){
+empty = Lijst;
+    Fragment newFrag = new ShowMapFragment().newInstance("a","b");
     FragmentManager fMgr = getFragmentManager();
     FragmentTransaction fTr = fMgr.beginTransaction();
     fTr.replace(R.id.container, newFrag);
@@ -96,13 +99,23 @@ private GoogleMap Gmap;
         map.setMyLocationEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(Testdata, 11));
         for(String[] array : Lijstje){
-            Double X = Double.parseDouble(array[6]);
-            Double Y = Double.parseDouble(array[7]);
-            LatLng Positie = new LatLng(Y,X);
-            map.addMarker(new MarkerOptions()
-                    .title("" + array[0])
-                    .snippet("klik hier voor meer info")
-                    .position(Positie));
+            int gelijk = 0;
+            for(String[] a : empty){
+
+                if((array[4].toString().toLowerCase()).equals((a[0].toString().toLowerCase()))){gelijk = 1;}
+            }
+            if(gelijk==1){
+                //indien het er  inzit
+                Double X = Double.parseDouble(array[6]);
+                Double Y = Double.parseDouble(array[7]);
+                LatLng Positie = new LatLng(Y,X);
+                map.addMarker(new MarkerOptions()
+                        .title("" + array[0])
+                        .snippet("klik hier voor meer info")
+                        .position(Positie));
+            }
+
+
 
 
 
@@ -117,11 +130,7 @@ private GoogleMap Gmap;
                 .position(Testdata));*/
     }
     SportcentraLoader a = null;
-    @Override
-    public void onFragmentInteraction(int page) {
-showFragmentMap();
 
-    }
   //  private SportCentraAdapter madapter;
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -168,5 +177,10 @@ showFragmentMap();
         FragmentManager fMgr = getFragmentManager();
         fMgr.popBackStack();
        // MainFragment fragment1 = (MainFragment) getFragmentManager().findFragmentByTag("Mapfrag");
+    }
+
+    @Override
+    public void onFragmentInteraction(ArrayList<String[]> LijstSwitches) {
+        showFragmentMap(LijstSwitches);
     }
 }

@@ -15,6 +15,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by wouter on 25/04/2015.
@@ -115,7 +117,7 @@ public class ShowMapFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int page);
+        public void onFragmentInteraction(ArrayList<String[]> LijstSwitches);
     }
 
 }
