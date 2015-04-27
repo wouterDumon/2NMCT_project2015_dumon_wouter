@@ -63,11 +63,14 @@ private void showFragmentMap(){
     fTr.replace(R.id.container, newFrag);
     fTr.addToBackStack("mainfrag");
     fTr.commit();
+    MapFragment mapFragment = (MapFragment) newFrag;
+    mapFragment.getMapAsync(this);
 }
 private GoogleMap Gmap;
     @Override
     public void onMapReady(GoogleMap map) {
         Gmap = map;
+ //      setContentView(R.layout.activity_main);
        LatLng Testdata = new LatLng(50.806905141279,3.3014492766399);
         map.getUiSettings().setZoomGesturesEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
@@ -98,10 +101,8 @@ private GoogleMap Gmap;
     SportcentraLoader a = null;
     @Override
     public void onFragmentInteraction(int page) {
-        setContentView(R.layout.fragment_map);
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+showFragmentMap();
+
     }
   //  private SportCentraAdapter madapter;
   @Override
@@ -139,7 +140,6 @@ private GoogleMap Gmap;
         Fragment newFrag = new DetailFragment().newInstance(title,Lijstje);
         FragmentManager fMgr = getFragmentManager();
         FragmentTransaction fTr = fMgr.beginTransaction();
-
         fTr.replace(R.id.container, newFrag);
         fTr.addToBackStack("Mapfrag");
         fTr.commit();
@@ -147,6 +147,8 @@ private GoogleMap Gmap;
 
     @Override
     public void onFragmentInteraction() {
-
+        FragmentManager fMgr = getFragmentManager();
+        fMgr.popBackStack();
+       // MainFragment fragment1 = (MainFragment) getFragmentManager().findFragmentByTag("Mapfrag");
     }
 }

@@ -17,7 +17,7 @@
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="475dp"
-        android:id="@android:id/list"
+        android:id="@+id/mijnlijst"
         android:layout_gravity="center_horizontal|top"
         android:layout_alignEnd="@+id/btnTerug"
         android:layout_alignParentTop="true"
