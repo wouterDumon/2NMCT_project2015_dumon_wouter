@@ -1,14 +1,7 @@
 package nmct.howest.be.desproject;
 
 import android.app.Activity;
-import android.app.ListFragment;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.database.CharArrayBuffer;
-import android.database.ContentObserver;
-import android.database.Cursor;
-import android.database.DataSetObserver;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,16 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-
-import nmct.howest.be.desproject.loader.Contract;
 
 
 /**
@@ -94,44 +82,7 @@ private ListView lv;
       //  getLoaderManager().initLoader(0,null,this);
     }
 
-  /*  private DetailAdapter madapter;
-    class DetailAdapter extends SimpleCursorAdapter {
-        public DetailAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
-            super(context, layout, c, from, to, flags);
 
-        }
-
-        @Override
-        public void bindView(View v, Context context, Cursor cursor) {
-            super.bindView(v, context, cursor);
-            ViewHolder holder = (ViewHolder)v.getTag();
-            if(holder == null){
-                holder = new ViewHolder(v);
-                v.setTag(holder);
-            }
-            for(String[] arr : ARG_PARAM2){
-                if(arr[0]==ARG_PARAM1){
-                    holder.benaming.setText("" + arr[0]);
-                }
-            }
-            //PAYZE
-
-           // ImageView icon = holder.imgicon;
-           /* String aantalkamers = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_STUDENENKOT_AANTALKAMERS));
-            String zuhousenummer = cursor.getString(cursor.getColumnIndex((Contract.COLUMN_STUDENTENKOT_HUISNUMMER)));
-            String Adres= cursor.getString(cursor.getColumnIndex((Contract.COLUMN_STUDENTENKOT_ADRES)));
-            TextView Straat = holder.txtAdres;
-            Straat.setText(""+Adres);
-            TextView Huisnummer = (TextView)holder.txthuisnummer;
-            Huisnummer.setText(""+zuhousenummer);
-            String Gemeente = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_STUDENTENKOT_GEMEENTE));
-            TextView Gem = holder.txtgemeente;
-            Gem.setText(""+Gemeente);
-            TextView kamers = holder.txtkamers;
-            kamers.setText("AANTAL KAMERS: " + aantalkamers);*/
-
-      /* }
-    }*/
       public class DetailsAdapter extends ArrayAdapter<String[]> {
           public DetailsAdapter(Context context, int resource, ArrayList<String[]> arr) {
               super(context, resource,arr);
@@ -155,13 +106,13 @@ private ListView lv;
 
 
              String[]array = getItem(position);
-                      holder.benaming.setText("" + array[0]);
-
-           //   TextView tvHome = (TextView) convertView.findViewById(R.id.tvHome);
-              // Populate the data into the template view using the data object
-             // tvName.setText(user.name);
-             // tvHome.setText(user.hometown);
-              // Return the completed view to render on screen
+              if(array[0] !="") {
+                  holder.afmetingen.setText("" + array[5]);
+                  holder.Adres.setText("" + array[1]);
+                  holder.Gemeente.setText("" + array[2]);
+                  holder.Soort.setText("" + array[3]);
+                  holder.Sport.setText("" + array[4]);
+              }
               return convertView;
           }
       }
@@ -181,6 +132,8 @@ Button goback = (Button)v.findViewById(R.id.btnTerug);
             }
         });
 
+        TextView Sportcentra = (TextView)v.findViewById(R.id.txtSoortSport);
+        Sportcentra.setText("" + ARG_PARAM1);
         String[] a = new String[1];
         a[0] = "";
         ArrayList<String[]> b = new ArrayList<String[]>();
@@ -193,6 +146,7 @@ Button goback = (Button)v.findViewById(R.id.btnTerug);
             if (test1.equals(test2)) {
                // holder.benaming.setText("" + arr[0]);
                 adapter.add(arr);
+
             }
         }
 // Attach the adapter to a ListView
@@ -203,16 +157,19 @@ return v;
 
     class ViewHolder{
       //  public ImageView imgicon = null;
-        public TextView benaming = null;
-       /* public TextView txtgemeente = null;
-        public TextView txtkamers = null;
-        public TextView txthuisnummer = null;*/
+        public TextView afmetingen = null;
+     public TextView Sport = null;
+        public TextView Soort = null;
+        public TextView Adres = null;
+        public TextView Gemeente = null;
         public ViewHolder(View row){
-            this.benaming=(TextView)row.findViewById(R.id.txtBenaming);
-           /* this.txtAdres=(TextView)row.findViewById(R.id.txtAdres);
-            this.txtgemeente=(TextView)row.findViewById(R.id.txtGemeente);
-            this.txtkamers = (TextView)row.findViewById(R.id.txtKamers);
-            this.txthuisnummer = (TextView)row.findViewById(R.id.txtNummer);*/
+            //this.benaming=(TextView)row.findViewById(R.id.txtSport);
+this.Sport = (TextView)row.findViewById(R.id.txtSport);
+        this.Soort = (TextView)row.findViewById(R.id.txtSoort);
+            this.Adres = (TextView)row.findViewById(R.id.txtAdres);
+            this.afmetingen = (TextView)row.findViewById(R.id.txtAfmetingen);
+            this.Gemeente = (TextView)row.findViewById(R.id.txtGemeente);
+
         }
 
     }

@@ -20,7 +20,16 @@
         android:id="@+id/mijnlijst"
         android:layout_gravity="center_horizontal|top"
         android:layout_alignEnd="@+id/btnTerug"
+        android:layout_above="@+id/btnTerug"
+        android:layout_below="@+id/txtSoortSport" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Sportcentrum"
+        android:id="@+id/txtSoortSport"
         android:layout_alignParentTop="true"
-        android:layout_above="@+id/btnTerug" />
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
