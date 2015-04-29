@@ -73,6 +73,7 @@ Button ChangeFrag = (Button)v.findViewById(R.id.btnChangeToFragmentMap);
         mListener.onFragmentInteraction(Switches);
     }
 });
+
 ArrayList<String> Sporten = new ArrayList<String>();
      //   Sporten.add("test");
         int teller = 0;
@@ -112,8 +113,11 @@ ArrayList<String> Sporten = new ArrayList<String>();
         ListView listView = (ListView) v.findViewById(R.id.MijnMainLijst);
         listView.setAdapter(adapter);
 
+
+
     return v;
     }
+
 
 
 
@@ -141,21 +145,25 @@ private ArrayList<String[]> Switches = new ArrayList<String[]>();
     private String[] PerSwitch = new String[2];
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-String naam = buttonView.getText().toString();
-      //  private ArrayList<String[]> Switches = new ArrayList<String[]>();
-         String[] PerSwitche = new String[2];
+        String naam = buttonView.getText().toString();
+        //  private ArrayList<String[]> Switches = new ArrayList<String[]>();
+        String[] PerSwitche = new String[2];
         int gelijk = 0;
-        for(String[] a : Switches){
+        for (String[] a : Switches) {
 
-            if((a[0].toString().toLowerCase()).equals((naam.toString().toLowerCase()))){gelijk = 1;}
+            if ((a[0].toString().toLowerCase()).equals((naam.toString().toLowerCase()))) {
+                gelijk = 1;
+         a[1] = "" + isChecked;
+            }
         }
-        if(gelijk==0){
+        if (gelijk == 0) {
             //indien het er niet inzit
             PerSwitche[0] = naam;
-            PerSwitche[1] = ""+ isChecked;
+            PerSwitche[1] = "" + isChecked;
             Switches.add(PerSwitche);
         }
     }
+
 
 
 
@@ -198,6 +206,20 @@ String naam = buttonView.getText().toString();
                 holder.Sport.setText("" + array[4]);*/
                 holder.SoortSpport.setText(""+array);
 holder.Switch.setText(""+array);
+
+
+                if(Switches.size() != 0){
+                    for(String[] Switchh : Switches){
+                        if(Switchh[1].toLowerCase().equals("true")){
+                            if(array.equals(Switchh[0])){
+                                holder.Switch.setChecked(true);
+                            }
+                        }
+                            // Switch sw = (Switch)v.findViewsWithText("",Switchh[1],0);
+
+                        }
+                    }
+
                 holder.Switch.setOnCheckedChangeListener(MainFragment.this);
             }
             return convertView;

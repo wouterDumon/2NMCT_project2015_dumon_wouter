@@ -112,8 +112,10 @@ empty = Lijst;
 private GoogleMap Gmap;
     @Override
     public void onMapReady(GoogleMap map) {
+
         Gmap = map;
  //      setContentView(R.layout.activity_main);
+      map.clear(); //delete de vorige markers
        LatLng Testdata = new LatLng(50.806905141279,3.3014492766399);
         map.getUiSettings().setZoomGesturesEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
@@ -122,9 +124,12 @@ private GoogleMap Gmap;
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(Testdata, 11));
         for(String[] array : Lijstje){
             int gelijk = 0;
-            for(String[] a : empty){
-
-                if((array[4].toString().toLowerCase()).equals((a[0].toString().toLowerCase()))){gelijk = 1;}
+            for(String[] a : empty) {
+                if (a[1].toLowerCase().equals("true")) {
+                    if ((array[4].toString().toLowerCase()).equals((a[0].toString().toLowerCase()))) {
+                        gelijk = 1;
+                    }
+                }
             }
             if(gelijk==1){
                 //indien het er  inzit
