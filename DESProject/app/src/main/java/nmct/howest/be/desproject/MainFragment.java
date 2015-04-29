@@ -74,15 +74,31 @@ Button ChangeFrag = (Button)v.findViewById(R.id.btnChangeToFragmentMap);
 });
 ArrayList<String> Sporten = new ArrayList<String>();
      //   Sporten.add("test");
-        MainAdapter adapter = new MainAdapter(getActivity(),0,Sporten);
+        int teller = 0;
         for(String[] arr : ARG_PARAM1){
-    if(Sporten.contains(arr[4])){}else{
-        Sporten.add(arr[4]);
-      //  adapter.add(arr[4]);
-    }
+            if(teller==0){
+                Sporten.add(arr[4]);
+            }
+            teller++;
+            if(Sporten.size()!=0){
+            int gelijk = 0;
+                for(String a : Sporten) {
+
+                if (a.toLowerCase().toString().contains(arr[4].toLowerCase())) {
+                    gelijk = 1;
+                } else {
+
+                }
+            }
+                if(gelijk == 0){
+                    Sporten.add(arr[4]);
+                }
+            }
+
 
 }
         Collections.sort(Sporten);
+        MainAdapter adapter = new MainAdapter(getActivity(),0,Sporten);
         ListView listView = (ListView) v.findViewById(R.id.MijnMainLijst);
         listView.setAdapter(adapter);
 
@@ -115,6 +131,8 @@ private ArrayList<String[]> Switches = new ArrayList<String[]>();
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 String naam = buttonView.getText().toString();
+      //  private ArrayList<String[]> Switches = new ArrayList<String[]>();
+         String[] PerSwitche = new String[2];
         int gelijk = 0;
         for(String[] a : Switches){
 
@@ -122,9 +140,9 @@ String naam = buttonView.getText().toString();
         }
         if(gelijk==0){
             //indien het er niet inzit
-            PerSwitch[0] = naam;
-            PerSwitch[1] = ""+ isChecked;
-            Switches.add(PerSwitch);
+            PerSwitche[0] = naam;
+            PerSwitche[1] = ""+ isChecked;
+            Switches.add(PerSwitche);
         }
     }
 
