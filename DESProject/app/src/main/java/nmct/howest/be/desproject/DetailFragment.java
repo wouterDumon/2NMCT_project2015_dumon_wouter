@@ -28,6 +28,8 @@ public class DetailFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static List<String[]> ARG_PARAM2 = new ArrayList<String[]>();
+    private static List<String[]> InAdapter = new ArrayList<String[]>();
+    private static List<String[]> filter = new ArrayList<String[]>();
     private static String ARG_PARAM1 = "param1";
 
     // TODO: Rename and change types of parameters
@@ -45,12 +47,13 @@ public class DetailFragment extends Fragment {
      * @return A new instance of fragment DetailFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DetailFragment newInstance(String param1, List<String[]> param2) {
+    public static DetailFragment newInstance(String param1, List<String[]> param2, List<String[]> param3) {
         DetailFragment fragment = new DetailFragment();
         Bundle args = new Bundle();
         //args.putString(ARG_PARAM1, param1);
         ARG_PARAM1 = param1;
         ARG_PARAM2 = param2;
+        filter = param3;
         //args.putStringArrayList(ARG_PARAM2, param2);
 
         fragment.setArguments(args);
@@ -60,13 +63,15 @@ public class DetailFragment extends Fragment {
     public DetailFragment() {
         // Required empty public constructor
     }
-private ListView lv;
+
+    private ListView lv;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
-           // mParam2 = getArguments().getString(ARG_PARAM2);
+            // mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
     }
@@ -74,48 +79,51 @@ private ListView lv;
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-      //  madapter = new DetailAdapter(getActivity(),R.layout.row_detail,null,new String[]{Contract.COLUMN_SPORTCENTRA_BENAMING},new int[]{R.id.txtBenaming},0);
-      //  setListAdapter(madapter);
-       // Cursor c = new Cursor();
+        //  madapter = new DetailAdapter(getActivity(),R.layout.row_detail,null,new String[]{Contract.COLUMN_SPORTCENTRA_BENAMING},new int[]{R.id.txtBenaming},0);
+        //  setListAdapter(madapter);
+        // Cursor c = new Cursor();
 
 
-      //  getLoaderManager().initLoader(0,null,this);
+        //  getLoaderManager().initLoader(0,null,this);
     }
 
 
-      public class DetailsAdapter extends ArrayAdapter<String[]> {
-          public DetailsAdapter(Context context, int resource, ArrayList<String[]> arr) {
-              super(context, resource,arr);
-          }
+    public class DetailsAdapter extends ArrayAdapter<String[]> {
+        public DetailsAdapter(Context context, int resource, ArrayList<String[]> arr) {
+            super(context, resource, arr);
+        }
 
-          @Override
-          public View getView(int position, View convertView, ViewGroup parent) {
-              // Get the data item for this position
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            // Get the data item for this position
             //  User user = getItem(position);
-              // Check if an existing view is being reused, otherwise inflate the view
-              if (convertView == null) {
-                  convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_detail, parent, false);
-              }
-              // Lookup view for data population
-           //   TextView tvName = (TextView) convertView.findViewById(R.id.txtBenaming);
-              ViewHolder holder = (ViewHolder)convertView.getTag();
-              if(holder == null){
-                  holder = new ViewHolder(convertView);
-                  convertView.setTag(holder);
-              }
+            // Check if an existing view is being reused, otherwise inflate the view
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_detail, parent, false);
+            }
+            // Lookup view for data population
+            //   TextView tvName = (TextView) convertView.findViewById(R.id.txtBenaming);
+            ViewHolder holder = (ViewHolder) convertView.getTag();
+            if (holder == null) {
+                holder = new ViewHolder(convertView);
+                convertView.setTag(holder);
+            }
 
 
-             String[]array = getItem(position);
-              if(array[0] !="") {
-                  holder.afmetingen.setText("" + array[5]);
-                  holder.Adres.setText("" + array[1]);
-                  holder.Gemeente.setText("" + array[2]);
-                  holder.Soort.setText("" + array[3]);
-                  holder.Sport.setText("" + array[4]);
-              }
-              return convertView;
-          }
-      }
+            String[] array = getItem(position);
+            if (array[0] != "") {
+
+                holder.afmetingen.setText("" + array[5]);
+                holder.Adres.setText("" + array[1]);
+                holder.Gemeente.setText("" + array[2]);
+                holder.Soort.setText("" + array[3]);
+                holder.Sport.setText("" + array[4]);
+
+
+            }
+            return convertView;
+        }
+    }
 
 
     @Override
@@ -123,57 +131,107 @@ private ListView lv;
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View v =  inflater.inflate(R.layout.fragment_detail, container, false);
-Button goback = (Button)v.findViewById(R.id.btnTerug);
+        View v = inflater.inflate(R.layout.fragment_detail, container, false);
+        Button goback = (Button) v.findViewById(R.id.btnTerug);
         goback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.onFragmentInteraction();
             }
         });
-
-        TextView Sportcentra = (TextView)v.findViewById(R.id.txtSoortSport);
+        int i = 0;
+        TextView Sportcentra = (TextView) v.findViewById(R.id.txtSoortSport);
         Sportcentra.setText("" + ARG_PARAM1);
         String[] a = new String[1];
         a[0] = "";
         ArrayList<String[]> b = new ArrayList<String[]>();
         b.add(a);
-        DetailsAdapter adapter = new DetailsAdapter(getActivity(),0,b);
+        DetailsAdapter adapter = new DetailsAdapter(getActivity(), 0, b);
+        String[] counting = new String[2];
+        ArrayList<String[]> inadap = new ArrayList<>();
+
         //adapter.add("");
-        for(String[] arr : ARG_PARAM2) {
+        for (String[] arr : ARG_PARAM2) {
             String test1 = arr[0].toString().toLowerCase();
             String test2 = ARG_PARAM1.toString().toLowerCase();
             if (test1.equals(test2)) {
-               // holder.benaming.setText("" + arr[0]);
-                adapter.add(arr);
+                // holder.benaming.setText("" + arr[0]);
+                for (String[] sw : filter) {
+                    if (arr[4].equals(sw[0]) && sw[1].equals("true")) {
+                        if (i == 0) {
+                            //adapter.add(arr);
+                            InAdapter.clear();
+                            inadap.clear();
+                            InAdapter.add(arr);
+                            String[] te = new String[2];
+                            te[0] = arr[4];
+                            te[1] = "1";
+                            inadap.add(te);
+i = 5;
+
+                        } else {
+                            for (String[] aa : InAdapter) {
+                                if (aa[4].equals(arr[4])) {
+                                    //zit al in de lijst
+                                    for (String[] bb : inadap) {
+                                        if (bb[0].equals(aa[4])) {
+                                            int tell = Integer.parseInt(bb[1]);
+                                            tell++;
+                                            bb[1] = "" +tell;
+                                        }
+                                    }
+                                } else {
+
+                                    InAdapter.add(arr);
+                                    String[] te = new String[2];
+                                    te[0] = arr[4];
+                                    te[1] = "1";
+                                    inadap.add(te);
+                                }
+                            }
+                        }
+
+
+                    }
+                }
 
             }
         }
+        for(String[] stringy : InAdapter){
+            for(String[] str : inadap){
+                if(stringy[4].equals(str[0])){
+                    stringy[4] = stringy[4]+ " (" + str[1] + ")";
+                }
+            }
+        }
+
+
+        adapter.addAll(InAdapter);
 // Attach the adapter to a ListView
         ListView listView = (ListView) v.findViewById(R.id.mijnlijst);
         listView.setAdapter(adapter);
-return v;
+        return v;
     }
 
-    class ViewHolder{
-      //  public ImageView imgicon = null;
+    class ViewHolder {
+        //  public ImageView imgicon = null;
         public TextView afmetingen = null;
-     public TextView Sport = null;
+        public TextView Sport = null;
         public TextView Soort = null;
         public TextView Adres = null;
         public TextView Gemeente = null;
-        public ViewHolder(View row){
+
+        public ViewHolder(View row) {
             //this.benaming=(TextView)row.findViewById(R.id.txtSport);
-this.Sport = (TextView)row.findViewById(R.id.txtSport);
-        this.Soort = (TextView)row.findViewById(R.id.txtSoort);
-            this.Adres = (TextView)row.findViewById(R.id.txtAdres);
-            this.afmetingen = (TextView)row.findViewById(R.id.txtAfmetingen);
-            this.Gemeente = (TextView)row.findViewById(R.id.txtGemeente);
+            this.Sport = (TextView) row.findViewById(R.id.txtSport);
+            this.Soort = (TextView) row.findViewById(R.id.txtSoort);
+            this.Adres = (TextView) row.findViewById(R.id.txtAdres);
+            this.afmetingen = (TextView) row.findViewById(R.id.txtAfmetingen);
+            this.Gemeente = (TextView) row.findViewById(R.id.txtGemeente);
 
         }
 
     }
-
 
 
     @Override

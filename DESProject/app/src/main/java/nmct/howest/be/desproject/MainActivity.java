@@ -39,6 +39,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback,MainFra
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Remove title bar
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         if(savedInstanceState == null) {
             progress = ProgressDialog.show(this, "Even geduld",
@@ -194,7 +196,7 @@ private GoogleMap Gmap;
         setProgressBarIndeterminateVisibility(true);
         setProgressBarVisibility(true);*/
       //  setContentView(R.layout.activity_main);
-        Fragment newFrag = new DetailFragment().newInstance(title,Lijstje);
+        Fragment newFrag = new DetailFragment().newInstance(title,Lijstje,empty);
         FragmentManager fMgr = getFragmentManager();
         FragmentTransaction fTr = fMgr.beginTransaction();
         fTr.replace(R.id.container, newFrag);
