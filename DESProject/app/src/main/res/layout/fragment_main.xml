@@ -7,7 +7,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Go to Fragment MAP"
+        android:text="Zoek"
         android:id="@+id/btnChangeToFragmentMap"
         android:layout_gravity="left|bottom"
         android:layout_alignParentBottom="true"
@@ -21,7 +21,7 @@
         android:text="Welk sportterein zoekt u?"
         android:id="@+id/textView5"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_toEndOf="@+id/space3" />
 
     <Space
         android:layout_width="20px"
@@ -38,5 +38,12 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/space"
         android:layout_above="@+id/btnChangeToFragmentMap" />
+
+    <Space
+        android:layout_width="35px"
+        android:layout_height="20px"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/space3" />
 
 </RelativeLayout>

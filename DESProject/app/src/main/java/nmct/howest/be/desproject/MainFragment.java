@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import nmct.howest.be.desproject.loader.Contract;
@@ -84,7 +85,7 @@ ArrayList<String> Sporten = new ArrayList<String>();
             int gelijk = 0;
                 for(String a : Sporten) {
 
-                if (a.toLowerCase().toString().contains(arr[4].toLowerCase())) {
+                if ((a.toLowerCase().toString()).contains(arr[4].toLowerCase().toString())) {
                     gelijk = 1;
                 } else {
 
@@ -97,13 +98,23 @@ ArrayList<String> Sporten = new ArrayList<String>();
 
 
 }
-        Collections.sort(Sporten);
+       // Sporten.add("hallo");
+        Collections.sort(Sporten, new Comparator(){
+
+            public int compare(Object o1, Object o2) {
+
+
+                String a = o1.toString().toLowerCase();
+               String b = o2.toString().toLowerCase();
+                return a.compareToIgnoreCase(b);
+            }});
         MainAdapter adapter = new MainAdapter(getActivity(),0,Sporten);
         ListView listView = (ListView) v.findViewById(R.id.MijnMainLijst);
         listView.setAdapter(adapter);
 
     return v;
     }
+
 
 
 

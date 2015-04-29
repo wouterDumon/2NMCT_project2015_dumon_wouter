@@ -47,14 +47,36 @@ public class MainActivity extends Activity implements OnMapReadyCallback,MainFra
                 @Override
                 public void run()
                 {
+
                     // do the thing that takes a long time
                 //   a = new SportcentraLoader(MainActivity.this);
 getLoaderManager().initLoader(0,null,MainActivity.this);
+
+
+                    while(Lijstje.size() == 0){
+                       try {
+                           Lijstje = a.getLijst();
+                       }catch(Exception ex){}
+                    }
+               //     a =  new SportcentraLoader(MainActivity.this);
+                 /*   try {
+                    //    Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        Toast.makeText(getApplicationContext(), "error",
+                                Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
+                    }*/
                     runOnUiThread(new Runnable() {
                         @Override
-                        public void run()
-                        {
-                            Lijstje = a.getLijst();
+                        public void run() {
+
+                          /*  Lijstje = a.getLijst();
+if(Lijstje.size() == 0){
+    Toast.makeText(getApplicationContext(), "NOT GOOD",
+            Toast.LENGTH_LONG).show();
+}
+*/
+
                             progress.dismiss();
                             FragmentManager fragmentManager = getFragmentManager();
                             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -137,11 +159,14 @@ private GoogleMap Gmap;
       a =  new SportcentraLoader(this);
       return a;
   }
-    private List<String[]> Lijstje;
+    private List<String[]> Lijstje = new ArrayList<String[]>();
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         //   madapter.swapCursor(data);
-        Lijstje = a.getLijst();
+        progress.dismiss();
+       // Lijstje = a.getLijst();
+        Toast.makeText(getApplicationContext(), "YaY",
+                Toast.LENGTH_LONG).show();
 
     }
 
