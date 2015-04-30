@@ -28,7 +28,9 @@ public class DetailFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static List<String[]> ARG_PARAM2 = new ArrayList<String[]>();
-    private static List<String[]> InAdapter = new ArrayList<String[]>();
+    private static List<String[]> test = new ArrayList<String[]>();
+    private static ArrayList<String[]> InAdapter = new ArrayList<String[]>();
+
     private static List<String[]> filter = new ArrayList<String[]>();
     private static String ARG_PARAM1 = "param1";
 
@@ -103,28 +105,64 @@ public class DetailFragment extends Fragment {
             }
             // Lookup view for data population
             //   TextView tvName = (TextView) convertView.findViewById(R.id.txtBenaming);
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-            if (holder == null) {
-                holder = new ViewHolder(convertView);
-                convertView.setTag(holder);
-            }
-
+            int teller = 0;
+            String text = "";
 
             String[] array = getItem(position);
             if (array[0] != "") {
+                ViewHolder holder = (ViewHolder) convertView.getTag();
+                if (holder == null) {
+                    holder = new ViewHolder(convertView);
+                    convertView.setTag(holder);
+                }
+
+                //int/ a =0;
+             //   for (String[] stringy : InAdapter) {
+                    // if (teller == 0) {
+                    //   if (stringy[0] != "") {
+                    for (String[] str : inadap) {
+                        //      if (teller == 0) {
+
+
+                        if (array[4].equals(str[0])) {
+                            //    test.add(array);
+                            //hier nog x doen
+                            //    if (a == 0) {
+                            // teller = 5;
+                            text = array[4] + " (" + str[1] + ")";
+
+
+                            //  str[0] = "";
+//stringy[4] = "";
+                            //a = 100;
+                  /*      holder.afmetingen.setText("" + array[5]);
+                        holder.Adres.setText("" + array[1]);
+                        holder.Gemeente.setText("" + array[2]);
+                        holder.Soort.setText("" + array[3]);
+                        holder.Sport.setText("" + text);*/
+                            // return convertView;
+                            //}
+                            //   }
+                        }
+                    }
 
                 holder.afmetingen.setText("" + array[5]);
                 holder.Adres.setText("" + array[1]);
                 holder.Gemeente.setText("" + array[2]);
                 holder.Soort.setText("" + array[3]);
-                holder.Sport.setText("" + array[4]);
+                holder.Sport.setText("" + text);
+                //   holder.Sport.setText("" + text);
 
 
             }
+            // if(text)
+
             return convertView;
+
         }
     }
 
+    private ArrayList<String[]> inadap = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -146,9 +184,9 @@ public class DetailFragment extends Fragment {
         a[0] = "";
         ArrayList<String[]> b = new ArrayList<String[]>();
         b.add(a);
-        DetailsAdapter adapter = new DetailsAdapter(getActivity(), 0, b);
+
         String[] counting = new String[2];
-        ArrayList<String[]> inadap = new ArrayList<>();
+
 
         //adapter.add("");
         for (String[] arr : ARG_PARAM2) {
@@ -167,28 +205,37 @@ public class DetailFragment extends Fragment {
                             te[0] = arr[4];
                             te[1] = "1";
                             inadap.add(te);
-i = 5;
+                            i = 5;
 
                         } else {
+                            int gelijk = 0;
+                            String zelfde = "";
                             for (String[] aa : InAdapter) {
-                                if (aa[4].equals(arr[4])) {
-                                    //zit al in de lijst
-                                    for (String[] bb : inadap) {
-                                        if (bb[0].equals(aa[4])) {
-                                            int tell = Integer.parseInt(bb[1]);
-                                            tell++;
-                                            bb[1] = "" +tell;
-                                        }
-                                    }
-                                } else {
 
-                                    InAdapter.add(arr);
-                                    String[] te = new String[2];
-                                    te[0] = arr[4];
-                                    te[1] = "1";
-                                    inadap.add(te);
+                                if (aa[4].equals(arr[4])) {
+                                    gelijk = 1;
+                                    zelfde = aa[4];
+                                    //zit al in de lijst
+
                                 }
                             }
+                            if (gelijk == 1) {
+                                for (String[] bb : inadap) {
+                                    if (bb[0].equals(zelfde)) {
+                                        int tell = Integer.parseInt(bb[1]);
+                                        tell++;
+                                        bb[1] = "" + tell;
+                                    }
+                                }
+                            } else {
+
+                                InAdapter.add(arr);
+                                String[] te = new String[2];
+                                te[0] = arr[4];
+                                te[1] = "1";
+                                inadap.add(te);
+                            }
+
                         }
 
 
@@ -197,19 +244,12 @@ i = 5;
 
             }
         }
-        for(String[] stringy : InAdapter){
-            for(String[] str : inadap){
-                if(stringy[4].equals(str[0])){
-                    stringy[4] = stringy[4]+ " (" + str[1] + ")";
-                }
-            }
-        }
 
-
-        adapter.addAll(InAdapter);
+        DetailsAdapter adapter = new DetailsAdapter(getActivity(), 0, InAdapter);
+        //for(String[]troll)
 // Attach the adapter to a ListView
-        ListView listView = (ListView) v.findViewById(R.id.mijnlijst);
-        listView.setAdapter(adapter);
+        ListView lv = (ListView) v.findViewById(R.id.mijnlijst);
+        lv.setAdapter(adapter);
         return v;
     }
 
@@ -251,16 +291,7 @@ i = 5;
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction();

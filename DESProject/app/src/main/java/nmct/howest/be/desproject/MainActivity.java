@@ -58,13 +58,14 @@ getLoaderManager().initLoader(0,null,MainActivity.this);
                     while(Lijstje.size() == 0){
                        try {
                            Lijstje = a.getLijst();
+                           GeefLijstAanDetails = Lijstje;
                        }catch(Exception ex){}
                     }
                //     a =  new SportcentraLoader(MainActivity.this);
                  /*   try {
                     //    Thread.sleep(5000);
                     } catch (InterruptedException e) {
-                        Toast.makeText(getApplicationContext(), "error",
+                        Toast.makeText(getApplicationCot(), "error",
                                 Toast.LENGTH_LONG).show();
                         e.printStackTrace();
                     }*/
@@ -167,6 +168,7 @@ private GoogleMap Gmap;
       return a;
   }
     private List<String[]> Lijstje = new ArrayList<String[]>();
+    private List<String[]> GeefLijstAanDetails = new ArrayList<String[]>();
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         //   madapter.swapCursor(data);
@@ -196,7 +198,7 @@ private GoogleMap Gmap;
         setProgressBarIndeterminateVisibility(true);
         setProgressBarVisibility(true);*/
       //  setContentView(R.layout.activity_main);
-        Fragment newFrag = new DetailFragment().newInstance(title,Lijstje,empty);
+        Fragment newFrag = new DetailFragment().newInstance(title,GeefLijstAanDetails,empty);
         FragmentManager fMgr = getFragmentManager();
         FragmentTransaction fTr = fMgr.beginTransaction();
         fTr.replace(R.id.container, newFrag);
