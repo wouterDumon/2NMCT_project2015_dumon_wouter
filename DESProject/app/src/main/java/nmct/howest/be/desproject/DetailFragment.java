@@ -2,6 +2,7 @@ package nmct.howest.be.desproject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -28,27 +29,14 @@ public class DetailFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static List<String[]> ARG_PARAM2 = new ArrayList<String[]>();
-    private static List<String[]> test = new ArrayList<String[]>();
     private static ArrayList<String[]> InAdapter = new ArrayList<String[]>();
-
     private static List<String[]> filter = new ArrayList<String[]>();
     private static String ARG_PARAM1 = "param1";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DetailFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static DetailFragment newInstance(String param1, List<String[]> param2, List<String[]> param3) {
         DetailFragment fragment = new DetailFragment();
         Bundle args = new Bundle();
@@ -64,6 +52,57 @@ public class DetailFragment extends Fragment {
 
     public DetailFragment() {
         // Required empty public constructor
+    }
+
+    private static final String PREFS_NAME = "MyPrefsFile";
+
+    @Override
+    public void onStop() {
+
+        //TODO: filter, arg_param1, arg_param2 opslaan in sharedpreferences
+
+        SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("SportNaam", ARG_PARAM1);
+        int i = 0;
+        for (String[] sw : filter) {
+            if (sw[1].equals("true")) {
+
+                editor.putString("Switch" + i, sw[0]);
+                i++;
+            }
+        }
+        editor.putInt("Aantalswitch", i);
+
+
+        editor.commit();
+        super.onStop();
+    }
+
+    @Override
+    public void onResume() {
+        SharedPreferences prefs = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+
+        if (filter.size() == 0) {
+            filter.clear();
+            int aantal = prefs.getInt("Aantalswitch", 0);
+            for (int ii = 0; ii < aantal; ii++) {
+                String sw = prefs.getString("Switch" + ii, "");
+                String[] a = new String[2];
+                a[0] = sw;
+                a[1] = "true";
+                filter.add(a);
+            }
+        }
+        if (ARG_PARAM1.equals("param1") || ARG_PARAM1.equals("")) {
+            ARG_PARAM1 = prefs.getString("SportNaam", "");
+        }
+        if (ARG_PARAM2.size() == 0) {
+            ARG_PARAM2.clear();
+            ARG_PARAM2 = ((MainActivity) getActivity()).getLijstje(); //wordt al bijgehouden in activity dus moet niet nog eens hier bijgehouden worden
+        }
+
+        super.onResume();
     }
 
     private ListView lv;
@@ -115,47 +154,22 @@ public class DetailFragment extends Fragment {
                     holder = new ViewHolder(convertView);
                     convertView.setTag(holder);
                 }
+                for (String[] str : inadap) {
+                    if (array[4].equals(str[0])) {
 
-                //int/ a =0;
-             //   for (String[] stringy : InAdapter) {
-                    // if (teller == 0) {
-                    //   if (stringy[0] != "") {
-                    for (String[] str : inadap) {
-                        //      if (teller == 0) {
-
-
-                        if (array[4].equals(str[0])) {
-                            //    test.add(array);
-                            //hier nog x doen
-                            //    if (a == 0) {
-                            // teller = 5;
-                            text = array[4] + " (" + str[1] + ")";
-
-
-                            //  str[0] = "";
-//stringy[4] = "";
-                            //a = 100;
-                  /*      holder.afmetingen.setText("" + array[5]);
-                        holder.Adres.setText("" + array[1]);
-                        holder.Gemeente.setText("" + array[2]);
-                        holder.Soort.setText("" + array[3]);
-                        holder.Sport.setText("" + text);*/
-                            // return convertView;
-                            //}
-                            //   }
-                        }
+                        text = array[4] + " (" + str[1] + ")";
                     }
+                }
 
                 holder.afmetingen.setText("" + array[5]);
                 holder.Adres.setText("" + array[1]);
                 holder.Gemeente.setText("" + array[2]);
                 holder.Soort.setText("" + array[3]);
                 holder.Sport.setText("" + text);
-                //   holder.Sport.setText("" + text);
 
 
             }
-            // if(text)
+
 
             return convertView;
 
@@ -170,13 +184,14 @@ public class DetailFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View v = inflater.inflate(R.layout.fragment_detail, container, false);
-        Button goback = (Button) v.findViewById(R.id.btnTerug);
+      /*  Button goback = (Button) v.findViewById(R.id.btnTerug);
         goback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.onFragmentInteraction();
             }
-        });
+        });*/
+
         int i = 0;
         TextView Sportcentra = (TextView) v.findViewById(R.id.txtSoortSport);
         Sportcentra.setText("" + ARG_PARAM1);
@@ -189,6 +204,17 @@ public class DetailFragment extends Fragment {
 
 
         //adapter.add("");
+        countequals();
+        DetailsAdapter adapter = new DetailsAdapter(getActivity(), 0, InAdapter);
+        //for(String[]troll)
+// Attach the adapter to a ListView
+        ListView lv = (ListView) v.findViewById(R.id.mijnlijst);
+        lv.setAdapter(adapter);
+        return v;
+    }
+
+    private void countequals() {
+        int i = 0;
         for (String[] arr : ARG_PARAM2) {
             String test1 = arr[0].toString().toLowerCase();
             String test2 = ARG_PARAM1.toString().toLowerCase();
@@ -245,12 +271,7 @@ public class DetailFragment extends Fragment {
             }
         }
 
-        DetailsAdapter adapter = new DetailsAdapter(getActivity(), 0, InAdapter);
-        //for(String[]troll)
-// Attach the adapter to a ListView
-        ListView lv = (ListView) v.findViewById(R.id.mijnlijst);
-        lv.setAdapter(adapter);
-        return v;
+
     }
 
     class ViewHolder {
@@ -296,5 +317,4 @@ public class DetailFragment extends Fragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction();
     }
-
 }

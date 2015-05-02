@@ -30,20 +30,22 @@ public class SportcentraLoader extends AsyncTaskLoader<Cursor> {
 
         super(context);
     }
-public List<String[]> Lijst = new ArrayList<String[]>();
+
+    public List<String[]> Lijst = new ArrayList<String[]>();
+
     @Override
     protected void onStartLoading() {
-        if(mCursor !=null){
+        if (mCursor != null) {
             deliverResult(mCursor);
         }
-        if(takeContentChanged()||mCursor==null){
+        if (takeContentChanged() || mCursor == null) {
             forceLoad();
         }
         super.onStartLoading();
     }
 
     private final String[] mColumnNames = new String[]{
-            BaseColumns._ID, Contract.COLUMN_SPORTCENTRA_BENAMING, Contract.COLUMN_SPORTCENTRA_ADRES, Contract.COLUMN_SPORTCENTRA_GEMEENTE, Contract.COLUMN_SPORTCENTRA_SOORT, Contract.COLUMN_SPORTCENTRA_SPORT,Contract.COLUMN_SPORTCENTRA_AFMETINGEN,Contract.COLUMN_SPORTCENTRA_X,Contract.COLUMN_SPORTCENTRA_Y
+            BaseColumns._ID, Contract.COLUMN_SPORTCENTRA_BENAMING, Contract.COLUMN_SPORTCENTRA_ADRES, Contract.COLUMN_SPORTCENTRA_GEMEENTE, Contract.COLUMN_SPORTCENTRA_SOORT, Contract.COLUMN_SPORTCENTRA_SPORT, Contract.COLUMN_SPORTCENTRA_AFMETINGEN, Contract.COLUMN_SPORTCENTRA_X, Contract.COLUMN_SPORTCENTRA_Y
     };
     private static Object lock = new Object();
 
@@ -79,30 +81,30 @@ public List<String[]> Lijst = new ArrayList<String[]>();
                     while (reader.hasNext()) {
                         String name = reader.nextName();
                         if (name.equals("benaming")) {
-                          benaming =  reader.nextString();
-                        }  else if (name.equals("adres")) {
-                       Adres =  reader.nextString();
-                    }else if (name.equals("gemeente")) {
-                           Gemeente = reader.nextString();
-                        }else if (name.equals("soort")) {
-                       Soort =     reader.nextString();
-                        }else if (name.equals("sport")) {
-                           Sport =  reader.nextString();
-                        }else if (name.equals("afmetingen")) {
-                           Afmeting =  reader.nextString();
-                        }else if (name.equals("y")) {
+                            benaming = reader.nextString();
+                        } else if (name.equals("adres")) {
+                            Adres = reader.nextString();
+                        } else if (name.equals("gemeente")) {
+                            Gemeente = reader.nextString();
+                        } else if (name.equals("soort")) {
+                            Soort = reader.nextString();
+                        } else if (name.equals("sport")) {
+                            Sport = reader.nextString();
+                        } else if (name.equals("afmetingen")) {
+                            Afmeting = reader.nextString();
+                        } else if (name.equals("y")) {
                             if (reader.peek().equals(JsonToken.NULL)) {
                                 reader.skipValue();
                             } else if (reader.peek().equals(JsonToken.NUMBER)) {
-                              Y =  reader.nextDouble();
+                                Y = reader.nextDouble();
                             }
-                        }else if (name.equals("x")) {
+                        } else if (name.equals("x")) {
                             if (reader.peek().equals(JsonToken.NULL)) {
                                 reader.skipValue();
                             } else if (reader.peek().equals(JsonToken.NUMBER)) {
-                               X =  reader.nextDouble();
+                                X = reader.nextDouble();
                             }
-                        }else{
+                        } else {
                             reader.skipValue();
                         }
 
@@ -110,7 +112,7 @@ public List<String[]> Lijst = new ArrayList<String[]>();
                     MatrixCursor.RowBuilder row = cursor.newRow();
                     //String[] benamingarray = new String[cursor.getCount()];
                     row.add(id);
-                     String[] arr = new String[8];
+                    String[] arr = new String[8];
                     row.add(benaming);
                     arr[0] = benaming;
                     row.add(Adres);
