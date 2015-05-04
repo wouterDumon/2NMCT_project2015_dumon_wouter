@@ -8,6 +8,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Sport"
+
         android:id="@+id/txtSport"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/Sport" />
