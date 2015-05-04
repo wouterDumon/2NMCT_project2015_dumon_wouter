@@ -87,22 +87,24 @@ public class MainFragment extends Fragment implements CompoundButton.OnCheckedCh
         //Switches.clear();
         SharedPreferences prefs = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         int aantal = prefs.getInt("Aantal", 0);
-        for (int ii = 0; ii < aantal; ii++) {
-            String sw = prefs.getString("Switch" + ii, "");
-            String[] a = new String[2];
-            a[0] = sw;
-            a[1] = "true";
-            int gggg = 0;
-            for (String[] t : Switches) {
-                if (t[0].equals(a[0])) {
-                    gggg = 1;
-                    t[1] = "true";
+        if(aantal == 0) {
+            for (int ii = 0; ii < aantal; ii++) {
+                String sw = prefs.getString("Switch" + ii, "");
+                String[] a = new String[2];
+                a[0] = sw;
+                a[1] = "true";
+                int gggg = 0;
+                for (String[] t : Switches) {
+                    if (t[0].equals(a[0])) {
+                        gggg = 1;
+                        t[1] = "true";
+                    }
                 }
-            }
-            if (gggg == 0) {
-                Switches.add(a);
-            }
+                if (gggg == 0) {
+                    Switches.add(a);
+                }
 
+            }
         }
     }
 
@@ -125,7 +127,7 @@ public class MainFragment extends Fragment implements CompoundButton.OnCheckedCh
                 mListener.onFragmentInteraction(Switches);
             }
         });
-
+ARG_PARAM1 = ((MainActivity) getActivity()).getLijstje();
         ArrayList<String> Sporten = new ArrayList<String>();
         //   Sporten.add("test");
         int teller = 0;

@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.Window;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
     public List<String[]> getLijstje() {
         return Lijstje;
     }
+    private boolean resumeHasRun = false;
 
     private static final String PREFS_NAME = "MyPrefsFile";
     //  private ArrayList Switches;
@@ -39,16 +41,17 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         //Remove title bar
         fragmentManager = getFragmentManager();
 
 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+        Lijstje = new ArrayList<>();
         if (savedInstanceState == null) {
             progress = ProgressDialog.show(this, "Even geduld",
                     "Bezig met het ophalen van data", true);
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -58,11 +61,20 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
                     getLoaderManager().initLoader(0, null, MainActivity.this);
 
 
-                    while (Lijstje.size() == 0 || Lijstje.size() > 200) { //52 elementen in lijst dus +200 => iets fout
+                    while (Lijstje.size() == 0) {
                         try {
-                            Lijstje = a.getLijst();
-                            GeefLijstAanDetails = Lijstje;
+                          if(Lijstje.size() == 0) {
+Lijstje = new ArrayList<String[]>();
+    Lijstje = a.getLijst();
+    GeefLijstAanDetails = a.getLijst();
+}
+                            int a = 10000;
+                            for(int i = 0 ; i<a; i++){
+
+                                //waste some time
+                            }
                         } catch (Exception ex) {
+                            Toast.makeText(MainActivity.this,"hallo",Toast.LENGTH_LONG);
                         }
                     }
 
@@ -85,6 +97,8 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
                 }
             }).start();
         }
+        super.onCreate(savedInstanceState);
+
     }
 
 /*
@@ -125,11 +139,18 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
 
     @Override
     protected void onResume() {
-
-        //   Lijstje.clear();
         empty.clear();
+        if (!resumeHasRun) {
+            super.onResume();
+            resumeHasRun = true;
+            return;
+        }
+        //   Lijstje.clear();
+
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        Lijstje = new ArrayList<>();
         if (Lijstje.size() == 0) {
+
             int aantal = prefs.getInt("Aantallijst", 0);
             for (int ii = 0; ii < aantal; ii++) {
                 String str = prefs.getString("lijst" + ii, "");
@@ -145,6 +166,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
                 }
                 //  Lijstje.clear();
             }
+          //  GeefLijstAanDetails = Lijstje;
         }
         super.onResume();
     }

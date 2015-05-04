@@ -55,7 +55,7 @@
         android:text="Sport: "
         android:id="@+id/Sport"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_toEndOf="@+id/space5" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -63,8 +63,8 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Adres: "
         android:id="@+id/textView"
-        android:layout_below="@+id/txtSport"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/Sport"
+        android:layout_toEndOf="@+id/space5" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
         android:text="Gemeente: "
         android:id="@+id/textView2"
         android:layout_below="@+id/textView"
-        android:layout_alignParentStart="true" />
+        android:layout_toEndOf="@+id/space5" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -82,7 +82,7 @@
         android:text="Soort: "
         android:id="@+id/textView3"
         android:layout_below="@+id/textView2"
-        android:layout_alignParentStart="true" />
+        android:layout_toEndOf="@+id/space5" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -91,13 +91,22 @@
         android:text="Afmetingen: "
         android:id="@+id/textView4"
         android:layout_below="@+id/textView3"
-        android:layout_alignParentStart="true" />
+        android:layout_toEndOf="@+id/space5" />
 
     <Space
         android:layout_width="20px"
         android:layout_height="40px"
         android:layout_below="@+id/txtAfmetingen"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:id="@+id/space4" />
+
+    <Space
+        android:layout_width="20px"
+        android:layout_height="20px"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/space4"
+        android:id="@+id/space5" />
 
 </RelativeLayout>

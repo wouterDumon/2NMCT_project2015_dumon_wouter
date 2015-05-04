@@ -72,7 +72,7 @@ public class ShowMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
         SharedPreferences.Editor editor = settings.edit();
         int i = 0;
         for (String[] sw : empt) {
-            if (sw[1].equals("true")) {
+            if (sw[1].equals("true") && !sw[0].equals("")) {
                 editor.putString("Switchmap" + i, sw[0]);
                 i++;
             }
@@ -97,20 +97,25 @@ public class ShowMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
 
     @Override
     public void onResume() {
-        empt.clear();
-        SharedPreferences prefs = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        int aantal = prefs.getInt("Aantalmapsw", 0);
-        for (int ii = 0; ii < aantal; ii++) {
-            String sw = prefs.getString("Switchmap" + ii, "");
-            String[] a = new String[2];
-            a[0] = sw;
-            a[1] = "true";
-            empt.add(a);
+        filluplists();
+        if(empt.size() == 0) {
+            empt = new ArrayList<>();
+            SharedPreferences prefs = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            int aantal = prefs.getInt("Aantalmapsw", 0);
+            for (int ii = 0; ii < aantal; ii++) {
+                String sw = prefs.getString("Switchmap" + ii, "");
+                if(!sw.equals("")) {
+                    String[] a = new String[2];
+                    a[0] = sw;
+                    a[1] = "true";
+                    empt.add(a);
+                }
 
+            }
         }
 
 
-        filluplists();
+       // filluplists();
         setUpMapIfNeeded(); //MOET VOOR SUPER
 
         super.onResume();
@@ -131,7 +136,12 @@ public class ShowMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
     private void filluplists() {
         if (empt.size() == 0) {
             empt.clear();
-            empt = ((MainActivity) getActivity()).getEmpty();
+            try {
+                empt = ((MainActivity) getActivity()).getEmpty();
+            }
+            catch(Exception ex){
+
+            }
         }
         if (Lijst.size() == 0) {
             Lijst.clear();
@@ -199,16 +209,18 @@ public class ShowMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
 
         map.clear(); //delete de vorige markers
         map.setMyLocationEnabled(true);
-        LatLng Testdata = new LatLng(50.806905141279, 3.3014492766399);
+        //3.257957375219,"x":50.829103511767
+        LatLng Testdata = new LatLng(50.829103511767, 3.257957375219);
         map.getUiSettings().setZoomGesturesEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
         map.setOnInfoWindowClickListener(this);
         map.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(Testdata, 11));
+       // map.moveCamera(CameraUpdateFactory.newLatLngZoom(Testdata, 11));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(Testdata, 11), 650, null);
         for (String[] array : Lijst) {
             int gelijk = 0;
             for (String[] a : empt) {
-                if (a[1].toLowerCase().equals("true")) {
+                if (a[1].toLowerCase().equals("true") && !a[1].equals("")) {
                     if ((array[4].toString().toLowerCase()).equals((a[0].toString().toLowerCase()))) {
                         gelijk = 1;
                     }
@@ -222,6 +234,7 @@ public class ShowMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 map.addMarker(new MarkerOptions()
                         .title("" + array[0])
                         .snippet("klik hier voor meer info")
+
                         .position(Positie));
             }
         }
