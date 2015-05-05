@@ -17,6 +17,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -98,13 +99,13 @@ public class ShowMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
     @Override
     public void onResume() {
         filluplists();
-        if(empt.size() == 0) {
+        if (empt.size() == 0) {
             empt = new ArrayList<>();
             SharedPreferences prefs = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
             int aantal = prefs.getInt("Aantalmapsw", 0);
             for (int ii = 0; ii < aantal; ii++) {
                 String sw = prefs.getString("Switchmap" + ii, "");
-                if(!sw.equals("")) {
+                if (!sw.equals("")) {
                     String[] a = new String[2];
                     a[0] = sw;
                     a[1] = "true";
@@ -115,7 +116,7 @@ public class ShowMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
         }
 
 
-       // filluplists();
+        // filluplists();
         setUpMapIfNeeded(); //MOET VOOR SUPER
 
         super.onResume();
@@ -138,8 +139,7 @@ public class ShowMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             empt.clear();
             try {
                 empt = ((MainActivity) getActivity()).getEmpty();
-            }
-            catch(Exception ex){
+            } catch (Exception ex) {
 
             }
         }
@@ -208,15 +208,16 @@ public class ShowMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
     private void zetmapgoed(GoogleMap map) {
 
         map.clear(); //delete de vorige markers
-        map.setMyLocationEnabled(true);
+        //map.setMyLocationEnabled(true);
         //3.257957375219,"x":50.829103511767
         LatLng Testdata = new LatLng(50.829103511767, 3.257957375219);
         map.getUiSettings().setZoomGesturesEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
         map.setOnInfoWindowClickListener(this);
-        map.setMyLocationEnabled(true);
-       // map.moveCamera(CameraUpdateFactory.newLatLngZoom(Testdata, 11));
+        //map.setMyLocationEnabled(true);
+        // map.moveCamera(CameraUpdateFactory.newLatLngZoom(Testdata, 11));
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(Testdata, 11), 650, null);
+        map.getUiSettings().setMyLocationButtonEnabled(false);
         for (String[] array : Lijst) {
             int gelijk = 0;
             for (String[] a : empt) {
@@ -234,7 +235,8 @@ public class ShowMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 map.addMarker(new MarkerOptions()
                         .title("" + array[0])
                         .snippet("klik hier voor meer info")
-
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.markericon))
+                        .anchor(0.0f, 1.0f) // Anchors the marker on the bottom left
                         .position(Positie));
             }
         }

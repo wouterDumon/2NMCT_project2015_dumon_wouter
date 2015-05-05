@@ -34,7 +34,7 @@ public class DetailFragment extends Fragment {
     private static String ARG_PARAM1 = "param1";
     private String mParam1;
     private String mParam2;
-private static int aantal = 0;
+    private static int aantal = 0;
     private OnFragmentInteractionListener mListener;
 
     public static DetailFragment newInstance(String param1, List<String[]> param2, List<String[]> param3) {
@@ -84,27 +84,27 @@ private static int aantal = 0;
     public void onResume() {
         SharedPreferences prefs = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
-       // if (filter.size() == 0) {
+        // if (filter.size() == 0) {
 
-            //filter.clear();
+        //filter.clear();
         filter = new ArrayList<>();
-            //int aantal = prefs.getInt("Aantalswitch", 0);
-            for (int ii = 0; ii < aantal; ii++) {
-                String sw = prefs.getString("Switch" + ii, "");
-                if(!sw.equals("")) {
-                    String[] a = new String[2];
-                    a[0] = sw;
-                    a[1] = "true";
-                    filter.add(a);
-                }
+        //int aantal = prefs.getInt("Aantalswitch", 0);
+        for (int ii = 0; ii < aantal; ii++) {
+            String sw = prefs.getString("Switch" + ii, "");
+            if (!sw.equals("")) {
+                String[] a = new String[2];
+                a[0] = sw;
+                a[1] = "true";
+                filter.add(a);
             }
-       // }
+        }
+        // }
         if (ARG_PARAM1.equals("param1") || ARG_PARAM1.equals("")) {
             ARG_PARAM1 = prefs.getString("SportNaam", "");
         }
-      //  if (ARG_PARAM2.size() == 0) {
-            ARG_PARAM2 = new ArrayList<>();
-            ARG_PARAM2 = ((MainActivity) getActivity()).getLijstje(); //wordt al bijgehouden in activity dus moet niet nog eens hier bijgehouden worden
+        //  if (ARG_PARAM2.size() == 0) {
+        ARG_PARAM2 = new ArrayList<>();
+        ARG_PARAM2 = ((MainActivity) getActivity()).getLijstje(); //wordt al bijgehouden in activity dus moet niet nog eens hier bijgehouden worden
         //}
 
         super.onResume();

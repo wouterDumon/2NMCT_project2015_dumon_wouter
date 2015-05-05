@@ -87,7 +87,7 @@ public class MainFragment extends Fragment implements CompoundButton.OnCheckedCh
         //Switches.clear();
         SharedPreferences prefs = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         int aantal = prefs.getInt("Aantal", 0);
-        if(aantal == 0) {
+        if (aantal == 0) {
             for (int ii = 0; ii < aantal; ii++) {
                 String sw = prefs.getString("Switch" + ii, "");
                 String[] a = new String[2];
@@ -127,7 +127,7 @@ public class MainFragment extends Fragment implements CompoundButton.OnCheckedCh
                 mListener.onFragmentInteraction(Switches);
             }
         });
-ARG_PARAM1 = ((MainActivity) getActivity()).getLijstje();
+        ARG_PARAM1 = ((MainActivity) getActivity()).getLijstje();
         ArrayList<String> Sporten = new ArrayList<String>();
         //   Sporten.add("test");
         int teller = 0;

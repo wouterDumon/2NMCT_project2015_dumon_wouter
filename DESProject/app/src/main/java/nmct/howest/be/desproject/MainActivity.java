@@ -33,6 +33,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
     public List<String[]> getLijstje() {
         return Lijstje;
     }
+
     private boolean resumeHasRun = false;
 
     private static final String PREFS_NAME = "MyPrefsFile";
@@ -63,18 +64,18 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
 
                     while (Lijstje.size() == 0) {
                         try {
-                          if(Lijstje.size() == 0) {
-Lijstje = new ArrayList<String[]>();
-    Lijstje = a.getLijst();
-    GeefLijstAanDetails = a.getLijst();
-}
+                            if (Lijstje.size() == 0) {
+                                Lijstje = new ArrayList<String[]>();
+                                Lijstje = a.getLijst();
+                                GeefLijstAanDetails = a.getLijst();
+                            }
                             int a = 10000;
-                            for(int i = 0 ; i<a; i++){
+                            for (int i = 0; i < a; i++) {
 
                                 //waste some time
                             }
                         } catch (Exception ex) {
-                            Toast.makeText(MainActivity.this,"hallo",Toast.LENGTH_LONG);
+                            Toast.makeText(MainActivity.this, "hallo", Toast.LENGTH_LONG);
                         }
                     }
 
@@ -166,7 +167,7 @@ Lijstje = new ArrayList<String[]>();
                 }
                 //  Lijstje.clear();
             }
-          //  GeefLijstAanDetails = Lijstje;
+            //  GeefLijstAanDetails = Lijstje;
         }
         super.onResume();
     }
