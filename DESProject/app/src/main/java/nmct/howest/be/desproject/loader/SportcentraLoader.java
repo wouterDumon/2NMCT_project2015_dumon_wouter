@@ -22,16 +22,16 @@ public class SportcentraLoader extends AsyncTaskLoader<Cursor> {
 
     private Cursor mCursor;
 
-    public List<String[]> getLijst() {
-        return Lijst;
-    }
+    /*public List<String[]> getLijst() {
+        return lijst;
+    }*/
 
     public SportcentraLoader(Context context) {
 
         super(context);
     }
 
-    public List<String[]> Lijst = new ArrayList<String[]>();
+   // public List<String[]> lijst = new ArrayList<String[]>();
 
     @Override
     protected void onStartLoading() {
@@ -112,26 +112,26 @@ public class SportcentraLoader extends AsyncTaskLoader<Cursor> {
                     MatrixCursor.RowBuilder row = cursor.newRow();
                     //String[] benamingarray = new String[cursor.getCount()];
                     row.add(id);
-                    String[] arr = new String[8];
+                  //  String[] arr = new String[8];
                     row.add(benaming);
-                    arr[0] = benaming;
+                   // arr[0] = benaming;
                     row.add(Adres);
-                    arr[1] = Adres;
+                  //  arr[1] = Adres;
                     row.add(Gemeente);
-                    arr[2] = Gemeente;
+                  //  arr[2] = Gemeente;
                     row.add(Soort);
-                    arr[3] = Soort;
+                  //  arr[3] = Soort;
                     row.add(Sport);
-                    arr[4] = Sport;
+                  //  arr[4] = Sport;
                     row.add(Afmeting);
-                    arr[5] = Afmeting;
+                  //  arr[5] = Afmeting;
                     row.add(Y);
-                    arr[6] = "" + Y;
+                  //  arr[6] = "" + Y;
                     row.add(X);
-                    arr[7] = "" + X;
+                  //  arr[7] = "" + X;
                     id++;
 
-                    Lijst.add(arr);
+                  //  lijst.add(arr);
                     reader.endObject();
                 }
                 reader.endArray();

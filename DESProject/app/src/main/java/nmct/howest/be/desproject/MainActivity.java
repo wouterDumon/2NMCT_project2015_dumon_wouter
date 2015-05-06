@@ -22,8 +22,8 @@ import java.util.List;
 import nmct.howest.be.desproject.loader.SportcentraLoader;
 
 
-public class MainActivity extends FragmentActivity implements MainFragment.OnFragmentInteractionListener, ShowMapFragment.OnFragmentInteractionListener, LoaderManager.LoaderCallbacks<Cursor>, DetailFragment.OnFragmentInteractionListener {
-    ProgressDialog progress;
+public class MainActivity extends FragmentActivity implements MainFragment.OnFragmentInteractionListener, ShowMapFragment.OnFragmentInteractionListener,  DetailFragment.OnFragmentInteractionListener {
+
 
 
     public ArrayList<String[]> getEmpty() {
@@ -31,7 +31,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
     }
 
     public List<String[]> getLijstje() {
-        return Lijstje;
+        return lijstje;
     }
 
     private boolean resumeHasRun = false;
@@ -43,30 +43,37 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Remove title bar
-        fragmentManager = getFragmentManager();
+       // fragmentManager = getFragmentManager();
 
 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-        Lijstje = new ArrayList<>();
+        lijstje = new ArrayList<>();
         if (savedInstanceState == null) {
-            progress = ProgressDialog.show(this, "Even geduld",
-                    "Bezig met het ophalen van data", true);
 
-            new Thread(new Runnable() {
+            FragmentManager fragmentManager = getFragmentManager();
+            MainFragment fragment1 = new MainFragment();//.newInstance(lijstje);
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            //parameters:
+            //1: ID container
+            //2: fragment
+            //3: Optional tag name for the fragment, to later retrieve the fragment with FragmentManager.findFragmentByTag(String).
+            fragmentTransaction.add(R.id.container, fragment1, "mainfrag").commit(); //VERPLICHT DIT TE ZETTEN ANDERS ZAL HIJ NULL FOUT GEVEN
+           // fragmentTransaction.commit();
+          /*  new Thread(new Runnable() {
                 @Override
                 public void run() {
 
                     // do the thing that takes a long time
                     //   a = new SportcentraLoader(MainActivity.this);
-                    getLoaderManager().initLoader(0, null, MainActivity.this);
+                   // getLoaderManager().initLoader(0, null, MainActivity.this);
 
 
-                    while (Lijstje.size() == 0) {
+                    while (lijstje.size() == 0) {
                         try {
-                            if (Lijstje.size() == 0) {
-                                Lijstje = new ArrayList<String[]>();
-                                Lijstje = a.getLijst();
+                            if (lijstje.size() == 0) {
+                                lijstje = new ArrayList<String[]>();
+                                lijstje = a.getLijst();
                                 GeefLijstAanDetails = a.getLijst();
                             }
                             int a = 10000;
@@ -86,7 +93,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
                             progress.dismiss();
                             FragmentManager fragmentManager = getFragmentManager();
                             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            MainFragment fragment1 = new MainFragment().newInstance(Lijstje);
+                            MainFragment fragment1 = new MainFragment().newInstance(lijstje);
                             //parameters:
                             //1: ID container
                             //2: fragment
@@ -96,7 +103,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
                         }
                     });
                 }
-            }).start();
+            }).start();*/
         }
         super.onCreate(savedInstanceState);
 
@@ -126,7 +133,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         int i = 0;
-        for (String[] listt : Lijstje) {
+        for (String[] listt : lijstje) {
             String str = "";
             for (String s : listt) {
                 str += s + ";";
@@ -149,8 +156,8 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
         //   Lijstje.clear();
 
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        Lijstje = new ArrayList<>();
-        if (Lijstje.size() == 0) {
+        lijstje = new ArrayList<>();
+        if (lijstje.size() == 0) {
 
             int aantal = prefs.getInt("Aantallijst", 0);
             for (int ii = 0; ii < aantal; ii++) {
@@ -162,8 +169,8 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
                     marray[id] = st;
                     id++;
                 }
-                if (!Lijstje.contains(marray)) {
-                    Lijstje.add(marray);
+                if (!lijstje.contains(marray)) {
+                    lijstje.add(marray);
                 }
                 //  Lijstje.clear();
             }
@@ -172,26 +179,8 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
         super.onResume();
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        a = new SportcentraLoader(this);
-        return a;
-    }
-
-    private List<String[]> Lijstje = new ArrayList<String[]>();
-    private List<String[]> GeefLijstAanDetails = new ArrayList<String[]>();
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        //   madapter.swapCursor(data);
-        progress.dismiss();
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        //madapter.swapCursor(null);
-    }
+    private List<String[]> lijstje = new ArrayList<String[]>();
+    private List<String[]> geefLijstAanDetails = new ArrayList<String[]>();
 
 
     private void showFragmentDetails(String title, ArrayList<String[]> Switchlijst) {
@@ -201,7 +190,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
         setProgressBarIndeterminateVisibility(true);
         setProgressBarVisibility(true);*/
         //  setContentView(R.layout.activity_main);
-        Fragment newFrag = new DetailFragment().newInstance(title, Lijstje, Switchlijst);
+        Fragment newFrag = new DetailFragment().newInstance(title, lijstje, Switchlijst);
         FragmentManager fMgr = getFragmentManager();
         FragmentTransaction fTr = fMgr.beginTransaction();
         fTr.replace(R.id.container, newFrag);
@@ -223,9 +212,10 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
     }
 
     @Override
-    public void onFragmentInteraction(ArrayList<String[]> LijstSwitches) {
-        empty = LijstSwitches;
-        showFragmentMap(LijstSwitches);
+    public void onFragmentInteraction(ArrayList<String[]> lijstSwitches, List<String[]> lijst) {
+lijstje = lijst;
+        empty = lijstSwitches;
+        showFragmentMap(lijstSwitches);
     }
 
     @Override
