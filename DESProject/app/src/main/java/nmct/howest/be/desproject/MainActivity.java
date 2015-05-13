@@ -22,8 +22,7 @@ import java.util.List;
 import nmct.howest.be.desproject.loader.SportcentraLoader;
 
 
-public class MainActivity extends FragmentActivity implements MainFragment.OnFragmentInteractionListener, ShowMapFragment.OnFragmentInteractionListener,  DetailFragment.OnFragmentInteractionListener {
-
+public class MainActivity extends FragmentActivity implements MainFragment.OnFragmentInteractionListener, ShowMapFragment.OnFragmentInteractionListener, DetailFragment.OnFragmentInteractionListener {
 
 
     public ArrayList<String[]> getEmpty() {
@@ -43,7 +42,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Remove title bar
-       // fragmentManager = getFragmentManager();
+        // fragmentManager = getFragmentManager();
 
 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -59,7 +58,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
             //2: fragment
             //3: Optional tag name for the fragment, to later retrieve the fragment with FragmentManager.findFragmentByTag(String).
             fragmentTransaction.add(R.id.container, fragment1, "mainfrag").commit(); //VERPLICHT DIT TE ZETTEN ANDERS ZAL HIJ NULL FOUT GEVEN
-           // fragmentTransaction.commit();
+            // fragmentTransaction.commit();
           /*  new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -148,11 +147,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
     @Override
     protected void onResume() {
         empty.clear();
-        if (!resumeHasRun) {
-            super.onResume();
-            resumeHasRun = true;
-            return;
-        }
+
         //   Lijstje.clear();
 
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -213,7 +208,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
 
     @Override
     public void onFragmentInteraction(ArrayList<String[]> lijstSwitches, List<String[]> lijst) {
-lijstje = lijst;
+        lijstje = lijst;
         empty = lijstSwitches;
         showFragmentMap(lijstSwitches);
     }

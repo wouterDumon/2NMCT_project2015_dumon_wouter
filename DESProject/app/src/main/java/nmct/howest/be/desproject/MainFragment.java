@@ -8,9 +8,11 @@ import android.content.Context;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -43,6 +46,8 @@ public class MainFragment extends ListFragment implements CompoundButton.OnCheck
     private static final String PREFS_NAME = "MyPrefsFile";
     private MainAdapter madapter;
     ProgressDialog progress;
+    private Cursor mCursor;
+    private boolean resumeHasRun;
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -50,12 +55,73 @@ public class MainFragment extends ListFragment implements CompoundButton.OnCheck
     }
 
     private List<String[]> lijstje = new ArrayList<String[]>();
+    private List<String[]> inadap = new ArrayList<String[]>();
 
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        madapter.swapCursor(cursor);
+        mCursor = cursor;
+        madapter.swapCursor(filterCursor(cursor));
         progress.dismiss();
+    }
+
+    private Cursor filterCursor(Cursor cursor) {
+
+        String[] mColumnNames = new String[]{
+                BaseColumns._ID, Contract.COLUMN_SPORTCENTRA_BENAMING, Contract.COLUMN_SPORTCENTRA_ADRES, Contract.COLUMN_SPORTCENTRA_GEMEENTE, Contract.COLUMN_SPORTCENTRA_SOORT, Contract.COLUMN_SPORTCENTRA_SPORT, Contract.COLUMN_SPORTCENTRA_AFMETINGEN, Contract.COLUMN_SPORTCENTRA_X, Contract.COLUMN_SPORTCENTRA_Y
+        };
+        MatrixCursor newCursor = new MatrixCursor(mColumnNames);
+        int id = 1;
+        if (cursor.moveToFirst()) {
+            do {
+                //controle
+
+                String[] marray = new String[8];
+                String benaming = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_BENAMING));
+                marray[0] = benaming;
+                String adres = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_ADRES));
+                marray[1] = adres;
+                String gemeente = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_GEMEENTE));
+                marray[2] = gemeente;
+                String soort = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_SOORT));
+                marray[3] = soort;
+                String sport = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_SPORT));
+                marray[4] = sport;
+                String afmetingen = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_AFMETINGEN));
+                marray[5] = afmetingen;
+                String y = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_Y));
+                marray[7] = y;
+                String x = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_X));
+                marray[6] = x;
+
+                int gelijk = 0;
+                if (lijstje.size() != 0) {
+                    for (String[] a : lijstje) {
+                        if (a[4].toLowerCase().equals(sport.toLowerCase())) {
+                            gelijk = 1;
+                        }
+                    }
+                }
+                if (!lijstje.contains(marray)) {
+                    lijstje.add(marray);
+                }
+                if (gelijk == 0) { // indien het er nog niet inzit zet het in de nieuwe cursor
+                    MatrixCursor.RowBuilder row = newCursor.newRow();
+                    row.add(id++);
+                    row.add(benaming);
+                    row.add(adres);
+                    row.add(gemeente);
+                    row.add(soort);
+                    row.add(sport);
+                    row.add(afmetingen);
+                    row.add(x);
+                    row.add(y);
+
+                }
+
+            } while (cursor.moveToNext());
+        }
+        return newCursor;
     }
 
     @Override
@@ -63,17 +129,18 @@ public class MainFragment extends ListFragment implements CompoundButton.OnCheck
         madapter.swapCursor(null);
     }
 
-    // TODO: Rename and change types of parameters
+
     private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
 
-    // TODO: Rename and change types and number of parameters
+
     public static MainFragment newInstance(List<String[]> param1) {
         MainFragment fragment = new MainFragment();
         //  ARG_PARAM1 = param1;
+
         return fragment;
 
     }
@@ -90,46 +157,137 @@ public class MainFragment extends ListFragment implements CompoundButton.OnCheck
 
         int i = 0;
         for (String[] sw : Switches) {
-            if (sw[1].equals("true")) {
 
-                editor.putString("Switch" + i, sw[0]);
-                i++;
+            editor.putString("Switch" + i, sw[0]);
+            i++;
+            if (sw[1].equals("true")) {
+                editor.putString("bool" + i, "true");
+
+            } else {
+                editor.putString("bool" + i, "false");
             }
         }
         editor.putInt("Aantal", i);
 
-
+        int si = 0;
+        for (String[] listt : lijstje) {
+            String str = "";
+            for (String s : listt) {
+                str += s + ";";
+            }
+            editor.putString("lijst" + si, str.toString());
+            si++;
+        }
+        editor.putInt("Aantallijst", si);
         editor.commit();
     }
 
     @Override
     public void onResume() {
+        /*if (!resumeHasRun) {
+            super.onResume();
+            resumeHasRun = true;
+            return;
+        }*/
         super.onResume();
         // if(Switches.size()==0){
         //Switches.clear();
         SharedPreferences prefs = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        int aantasl = prefs.getInt("Aantallijst", 0);
+
         int aantal = prefs.getInt("Aantal", 0);
-        if (aantal == 0) {
+        if (aantal != 0) {
             for (int ii = 0; ii < aantal; ii++) {
                 String sw = prefs.getString("Switch" + ii, "");
                 String[] a = new String[2];
                 a[0] = sw;
-                a[1] = "true";
+                if (prefs.getString("bool" + ii, "").equals("true")) {
+                    a[1] = "true";
+
+                } else {
+                    a[1] = "false";
+                }
+
                 int gggg = 0;
+                //controle of het er al inzit
                 for (String[] t : Switches) {
                     if (t[0].equals(a[0])) {
                         gggg = 1;
-                        t[1] = "true";
+                        // t[1] = "true";
                     }
                 }
                 if (gggg == 0) {
-                    Switches.add(a);
+                    if (a[0] != "") {
+                        Switches.add(a);
+                    }
                 }
 
             }
         }
-    }
 
+
+     //   lijstje = new ArrayList<>();
+        if (lijstje.size() != 0) {
+
+
+            for (int ii = 0; ii < aantasl; ii++) {
+                String str = prefs.getString("lijst" + ii, "");
+                List<String> arraylist = new ArrayList<String>(Arrays.asList(str.split(";")));
+                int id = 0;
+                String[] marray = new String[8];
+                for (String st : arraylist) {
+                    marray[id] = st;
+                    id++;
+                }
+                if (!lijstje.contains(marray)) {
+                    lijstje.add(marray);
+                }
+                //  Lijstje.clear();
+            }}
+        //TODO: HIER ADAPTER
+
+
+            inadap = new ArrayList<>(); // zeker maken dat hij leeg is
+
+            madapter.swapCursor(reCreateCursor(lijstje));
+
+    }
+    private Cursor reCreateCursor(List<String[]> lSwitch) {
+
+        String[] mColumnNames = new String[]{
+                BaseColumns._ID, Contract.COLUMN_SPORTCENTRA_BENAMING, Contract.COLUMN_SPORTCENTRA_ADRES, Contract.COLUMN_SPORTCENTRA_GEMEENTE, Contract.COLUMN_SPORTCENTRA_SOORT, Contract.COLUMN_SPORTCENTRA_SPORT, Contract.COLUMN_SPORTCENTRA_AFMETINGEN, Contract.COLUMN_SPORTCENTRA_X, Contract.COLUMN_SPORTCENTRA_Y
+        };
+        MatrixCursor newCursor = new MatrixCursor(mColumnNames);
+        int id = 1;
+
+        for(String[] y : lSwitch) {
+
+            int gelijk = 0;
+            if (inadap.size() != 0) {
+                for (String[] a : inadap) {
+                    if (a[4].toLowerCase().equals(y[4].toLowerCase())) {
+                        gelijk = 1;
+                    }
+                }
+            }
+inadap.add(y);
+            if (gelijk == 0) {
+
+
+                MatrixCursor.RowBuilder row = newCursor.newRow();
+                row.add(id++);
+                row.add(y[0]);
+                row.add(y[1]);
+                row.add(y[2]);
+                row.add(y[3]);
+                row.add(y[4]);
+                row.add(y[5]);
+                row.add(y[6]);
+                row.add(y[7]);
+            }
+        }
+        return newCursor;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,69 +307,6 @@ public class MainFragment extends ListFragment implements CompoundButton.OnCheck
                 mListener.onFragmentInteraction(Switches, lijstje);
             }
         });
-
-        // getLoaderManager().initLoader(0, null, this);
-
-      /*  ARG_PARAM1 = ((MainActivity) getActivity()).getLijstje();
-        ArrayList<String> Sporten = new ArrayList<String>();
-        //   Sporten.add("test");
-        int teller = 0;
-        for (String[] arr : ARG_PARAM1) {
-            if (teller == 0) {
-                Sporten.add(arr[4]);
-            }
-            teller++;
-            if (Sporten.size() != 0) {
-                int gelijk = 0;
-                for (String a : Sporten) {
-                    //Vul Lijst in
-                    String[] PerSwitche = new String[2];
-                    PerSwitche[0] = a;
-                    PerSwitche[1] = "false";
-                    int gg = 0;
-                    if (Switches.size() != 0) {
-                        for (String[] sw : Switches) {
-                            if (sw[0].equals(a)) {
-                                gg = 1;
-                            }
-                        }
-                        if (gg == 0) {
-                            //zit nog niet in array
-                            Switches.add(PerSwitche);
-                        }
-                    } else {
-                        Switches.add(PerSwitche);
-                    }
-                    if ((a.toLowerCase().toString()).contains(arr[4].toLowerCase().toString())) {
-                        gelijk = 1;
-                    } else {
-
-                    }
-                }
-                if (gelijk == 0) {
-                    Sporten.add(arr[4]);
-                }
-            }
-
-
-        }*/
-        // Sporten.add("hallo");
-      /*  Collections.sort(Sporten, new Comparator() {
-
-            public int compare(Object o1, Object o2) {
-
-
-                String a = o1.toString().toLowerCase();
-                String b = o2.toString().toLowerCase();
-                return a.compareToIgnoreCase(b);
-            }
-        });
-*/
-
-        //   MainAdapter adapter = new MainAdapter(getActivity(), 0, Sporten);
-        //    ListView listView = (ListView) v.findViewById(R.id.MijnMainLijst);
-        //      listView.setAdapter(adapter);
-
 
         return v;
     }
@@ -272,7 +367,6 @@ public class MainFragment extends ListFragment implements CompoundButton.OnCheck
 
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         public void onFragmentInteraction(ArrayList<String[]> LijstSwitches, List<String[]> lijst);
     }
 
@@ -280,18 +374,19 @@ public class MainFragment extends ListFragment implements CompoundButton.OnCheck
     ///
     public class MainAdapter extends SimpleCursorAdapter {
         Context con;
+
         public MainAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
             super(context, layout, c, from, to, flags);
-con = context;
+            con = context;
         }
 
 
-        @Override
+      /* @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
 
             if (convertView == null) {
-                convertView = LayoutInflater.from(con).inflate(R.layout.row_main,parent,false);
+                convertView = LayoutInflater.from(con).inflate(R.layout.row_main, parent, false);
             }
             // Lookup view for data population
             //   TextView tvName = (TextView) convertView.findViewById(R.id.txtBenaming);
@@ -316,21 +411,22 @@ con = context;
             String y = getCursor().getString(getCursor().getColumnIndex(Contract.COLUMN_SPORTCENTRA_Y));
             marray[6] = y;
             int aa = 0;
-            if(lijstje.size() != 0) {
+            if (lijstje.size() != 0) {
                 for (String[] a : lijstje) {
                     if (a[4].equals(sport)) {
                         aa = 1;
                     }
                 }
             }
-            if(lijstje.contains(marray)){}else {
+            if (lijstje.contains(marray)) {
+            } else {
                 lijstje.add(marray);
             }
             if (aa == 1) {
 //wordt al getoont
 
-               return convertView;
-               // cursor.moveToNext();
+                return convertView;
+                // cursor.moveToNext();
             }
             ViewHolder holder = (ViewHolder) convertView.getTag();
             if (holder == null) {
@@ -357,87 +453,77 @@ con = context;
 
             }
             return convertView;
-           // return super.getView(position, convertView, parent);
+            // return super.getView(position, convertView, parent);
 
-        }
-
-
+        }*/
 
 
-      /*  @Override
+        @Override
         public void bindView(View view, Context context, Cursor cursor) {
             super.bindView(view, context, cursor);
 
-            String[] marray = new String[8];
+            // String[] marray = new String[8];
             String sport = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_SPORT));
-            marray[4] = sport;
+            // marray[4] = sport;
             String afmetingen = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_AFMETINGEN));
-            marray[5] = afmetingen;
+            // marray[5] = afmetingen;
             String adres = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_ADRES));
-            marray[1] = adres;
+            // marray[1] = adres;
             String benaming = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_BENAMING));
-            marray[0] = benaming;
+            // marray[0] = benaming;
             String gemeente = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_GEMEENTE));
-            marray[2] = gemeente;
+            // marray[2] = gemeente;
             String soort = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_SOORT));
-            marray[3] = soort;
+            // marray[3] = soort;
             String x = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_X));
-            marray[7] = x;
+            // marray[7] = x;
             String y = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_SPORTCENTRA_Y));
-            marray[6] = y;
-//if(!lijstje.contains(sport)) {
+            // marray[6] = y;
 
-//}
-            int aa = 0;
-            if(lijstje.size() != 0) {
-                for (String[] a : lijstje) {
-                    if (a[4].equals(getCursor().getColumnIndex(Contract.COLUMN_SPORTCENTRA_SPORT))) {
-                        aa = 1;
-                    }
+
+            ViewHolder holder = (ViewHolder) view.getTag();
+            if (holder == null) {
+                holder = new ViewHolder(view);
+                view.setTag(holder);
+            }
+            holder.SoortSpport.setText(sport);
+            holder.Switch.setText(sport);
+            holder.Switch.setOnCheckedChangeListener(MainFragment.this);
+
+            //eerste keer alle toevoegen aan array
+            String[] mijnswitch = new String[2];
+            mijnswitch[0] = sport;
+            mijnswitch[1] = "false";
+            int mnswt = 0;
+            for (String[] test : Switches) {
+                if (test[0].toLowerCase().equals(sport.toLowerCase())) {
+                    mnswt = 1;
                 }
             }
-            if(lijstje.contains(marray)){}else {
-                lijstje.add(marray);
+            if (mnswt == 0) {
+
+                Switches.add(mijnswitch);
+                holder.Switch.setChecked(false);
+
             }
-            if (aa == 1) {
 
-
-                cursor.moveToNext();
-            } else {
-                ViewHolder holder = (ViewHolder) view.getTag();
-                if (holder == null) {
-                    holder = new ViewHolder(view);
-                    view.setTag(holder);
-                }
-                holder.SoortSpport.setText(sport);
-                holder.Switch.setText(sport);
-                holder.Switch.setOnCheckedChangeListener(MainFragment.this);
-                if (Switches.size() != 0 || Switches.contains(sport)) {
-                    for (String[] sw : Switches) {
-                        if (sw[1].toLowerCase().equals("true")) {
-                            if (sport.equals(sw[0])) {
-                                holder.Switch.setChecked(true);
-                            }
-                        } else {
-                            if (sport.equals(sw[0])) {
-                                holder.Switch.setChecked(false);
-                            }
+            if (Switches.size() != 0) {
+                for (String[] sw : Switches) {
+                    if (sw[1].toLowerCase().equals("true")) {
+                        if (sport.equals(sw[0])) {
+                            holder.Switch.setChecked(true);
                         }
-
+                    } else {
+                        if (sport.equals(sw[0])) {
+                            holder.Switch.setChecked(false);
+                        }
                     }
-                } else {
-                    //eerste keer alle toevoegen aan array
-                    String[] mijnswitch = new String[2];
-                    mijnswitch[0] = sport;
-                    mijnswitch[1] = "false";
-                    Switches.add(mijnswitch);
-                    holder.Switch.setChecked(false);
 
                 }
             }
-
-        }*/
+        }
     }
+
     class ViewHolder {
         //  public ImageView imgicon = null;
         public TextView SoortSpport = null;
