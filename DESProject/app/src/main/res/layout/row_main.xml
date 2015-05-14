@@ -23,7 +23,7 @@
         android:textOff="NIET"
         android:textOn="WEL"
         android:elegantTextHeight="false"
-        android:textSize="12dp"
+        android:textSize="0dp"
         android:text="hahahaha" />
 
     <Space
