@@ -62,50 +62,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
             //3: Optional tag name for the fragment, to later retrieve the fragment with FragmentManager.findFragmentByTag(String).
             fragmentTransaction.add(R.id.container, fragment1, "mainfrag").commit(); //VERPLICHT DIT TE ZETTEN ANDERS ZAL HIJ NULL FOUT GEVEN
             // fragmentTransaction.commit();
-          /*  new Thread(new Runnable() {
-                @Override
-                public void run() {
 
-                    // do the thing that takes a long time
-                    //   a = new SportcentraLoader(MainActivity.this);
-                   // getLoaderManager().initLoader(0, null, MainActivity.this);
-
-
-                    while (lijstje.size() == 0) {
-                        try {
-                            if (lijstje.size() == 0) {
-                                lijstje = new ArrayList<String[]>();
-                                lijstje = a.getLijst();
-                                GeefLijstAanDetails = a.getLijst();
-                            }
-                            int a = 10000;
-                            for (int i = 0; i < a; i++) {
-
-                                //waste some time
-                            }
-                        } catch (Exception ex) {
-                            Toast.makeText(MainActivity.this, "hallo", Toast.LENGTH_LONG);
-                        }
-                    }
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            progress.dismiss();
-                            FragmentManager fragmentManager = getFragmentManager();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            MainFragment fragment1 = new MainFragment().newInstance(lijstje);
-                            //parameters:
-                            //1: ID container
-                            //2: fragment
-                            //3: Optional tag name for the fragment, to later retrieve the fragment with FragmentManager.findFragmentByTag(String).
-                            fragmentTransaction.add(R.id.container, fragment1, "mainfrag"); //VERPLICHT DIT TE ZETTEN ANDERS ZAL HIJ NULL FOUT GEVEN
-                            fragmentTransaction.commit();
-                        }
-                    });
-                }
-            }).start();*/
         }
         super.onCreate(savedInstanceState);
 
@@ -119,6 +76,8 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
     private ArrayList<String[]> empty = new ArrayList<String[]>();
 
     private void showFragmentMap(ArrayList<String[]> Lijst) {
+        empty = Lijst;
+        //   lijstje = lijstje;
         Fragment newFrag = new ShowMapFragment();//.newInstance(empty,Lijstje); Niet anders ropet hij oncreateview niet meer op!
         FragmentManager fMgr = getFragmentManager();
         FragmentTransaction fTr = fMgr.beginTransaction();
@@ -132,19 +91,22 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
     @Override
     protected void onStop() {
         super.onStop();
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        int i = 0;
-        for (String[] listt : lijstje) {
-            String str = "";
-            for (String s : listt) {
-                str += s + ";";
+        if (lijstje.size() != 0) {
+            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+            SharedPreferences.Editor editor = settings.edit();
+
+            int i = 0;
+            for (String[] listt : lijstje) {
+                String str = "";
+                for (String s : listt) {
+                    str += s + ";";
+                }
+                editor.putString("lijst" + i, str.toString());
+                i++;
             }
-            editor.putString("lijst" + i, str.toString());
-            i++;
+            editor.putInt("Aantallijst", i);
+            editor.commit();
         }
-        editor.putInt("Aantallijst", i);
-        editor.commit();
     }
 
     @Override
@@ -160,7 +122,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
             int aantal = prefs.getInt("Aantallijst", 0);
             for (int ii = 0; ii < aantal; ii++) {
                 String str = prefs.getString("lijst" + ii, "");
-                List<String> arraylist = new ArrayList<String>(Arrays.asList(str.split(";")));
+                List<String> arraylist = new ArrayList<>(Arrays.asList(str.split(";")));
                 int id = 0;
                 String[] marray = new String[8];
                 for (String st : arraylist) {
@@ -177,7 +139,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
         super.onResume();
     }
 
-    private List<String[]> lijstje = new ArrayList<String[]>();
+    private List<String[]> lijstje = new ArrayList<>();
     private List<String[]> geefLijstAanDetails = new ArrayList<String[]>();
 
 

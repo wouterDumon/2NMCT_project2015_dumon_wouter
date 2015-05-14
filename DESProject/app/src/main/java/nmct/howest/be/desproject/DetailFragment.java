@@ -26,8 +26,6 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class DetailFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static List<String[]> ARG_PARAM2 = new ArrayList<String[]>();
     private static ArrayList<String[]> InAdapter = new ArrayList<String[]>();
     private static List<String[]> filter = new ArrayList<String[]>();
@@ -84,30 +82,32 @@ public class DetailFragment extends Fragment {
     public void onResume() {
         SharedPreferences prefs = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
-        // if (filter.size() == 0) {
+        if (filter.size() == 0) {
 
-        //filter.clear();
+            //filter.clear();
 
-        int lia = prefs.getInt("Aantalswitch", 0);
-        if(lia != 0){ filter = new ArrayList<>();}
-        //Aantalswitch
-       // String swh = prefs.getString("Aantalswitch", "");
+            int lia = prefs.getInt("Aantalswitch", 0);
+            if (lia != 0) {
+                filter = new ArrayList<>();
+            }
+            //Aantalswitch
+            // String swh = prefs.getString("Aantalswitch", "");
 
-        for (int ii = 0; ii < lia; ii++) {
-            String sw = prefs.getString("Switch" + ii, "");
+            for (int ii = 0; ii < lia; ii++) {
+                String sw = prefs.getString("Switch" + ii, "");
 
-            //TODO: hier kijken naar sw2 ofdat true
-            if (!sw.equals("")) {
-                String[] a = new String[2];
-                a[0] = sw;
-                a[1] = "true";
-                filter.add(a);
+                //TODO: hier kijken naar sw2 ofdat true
+                if (!sw.equals("")) {
+                    String[] a = new String[2];
+                    a[0] = sw;
+                    a[1] = "true";
+                    filter.add(a);
+                }
             }
         }
-        // }
-       // if (ARG_PARAM1.equals("param1") || ARG_PARAM1.equals("")) {
+        if (ARG_PARAM1.equals("param1") || ARG_PARAM1.equals("")) {
             ARG_PARAM1 = prefs.getString("SportNaam", "");
-       // }
+        }
         //  if (ARG_PARAM2.size() == 0) {
         ARG_PARAM2 = new ArrayList<>();
         ARG_PARAM2 = ((MainActivity) getActivity()).getLijstje(); //wordt al bijgehouden in activity dus moet niet nog eens hier bijgehouden worden
@@ -232,7 +232,7 @@ public class DetailFragment extends Fragment {
             if (test1.equals(test2)) {
                 // holder.benaming.setText("" + arr[0]);
                 for (String[] sw : filter) {
-                    if (arr[4].equals(sw[0]) && sw[1].equals("true")) {
+                    if (arr[4].toLowerCase().equals(sw[0].toLowerCase()) && sw[1].equals("true")) {
                         if (i == 0) {
                             //adapter.add(arr);
                             InAdapter = new ArrayList<>();

@@ -135,13 +135,13 @@ public class ShowMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
     }
 
     private void filluplists() {
-        if (empt.size() == 0) {
-            empt.clear();
-            try {
-                empt = ((MainActivity) getActivity()).getEmpty();
-            } catch (Exception ex) {
+        //  if (empt.size() == 0) {
+        //   empt.clear();
+        try {
+            empt = ((MainActivity) getActivity()).getEmpty();
+        } catch (Exception ex) {
 
-            }
+            //}
         }
         if (Lijst.size() == 0) {
             Lijst.clear();
