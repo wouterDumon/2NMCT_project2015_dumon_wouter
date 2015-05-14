@@ -87,10 +87,16 @@ public class DetailFragment extends Fragment {
         // if (filter.size() == 0) {
 
         //filter.clear();
-        filter = new ArrayList<>();
-        //int aantal = prefs.getInt("Aantalswitch", 0);
-        for (int ii = 0; ii < aantal; ii++) {
+
+        int lia = prefs.getInt("Aantalswitch", 0);
+        if(lia != 0){ filter = new ArrayList<>();}
+        //Aantalswitch
+       // String swh = prefs.getString("Aantalswitch", "");
+
+        for (int ii = 0; ii < lia; ii++) {
             String sw = prefs.getString("Switch" + ii, "");
+
+            //TODO: hier kijken naar sw2 ofdat true
             if (!sw.equals("")) {
                 String[] a = new String[2];
                 a[0] = sw;
@@ -99,9 +105,9 @@ public class DetailFragment extends Fragment {
             }
         }
         // }
-        if (ARG_PARAM1.equals("param1") || ARG_PARAM1.equals("")) {
+       // if (ARG_PARAM1.equals("param1") || ARG_PARAM1.equals("")) {
             ARG_PARAM1 = prefs.getString("SportNaam", "");
-        }
+       // }
         //  if (ARG_PARAM2.size() == 0) {
         ARG_PARAM2 = new ArrayList<>();
         ARG_PARAM2 = ((MainActivity) getActivity()).getLijstje(); //wordt al bijgehouden in activity dus moet niet nog eens hier bijgehouden worden

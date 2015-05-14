@@ -49,7 +49,10 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
         setContentView(R.layout.activity_main);
         lijstje = new ArrayList<>();
         if (savedInstanceState == null) {
-
+            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putInt("Aantallijst", 0);
+            editor.commit();
             FragmentManager fragmentManager = getFragmentManager();
             MainFragment fragment1 = new MainFragment();//.newInstance(lijstje);
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

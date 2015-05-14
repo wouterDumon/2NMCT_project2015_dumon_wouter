@@ -159,13 +159,14 @@ public class MainFragment extends ListFragment implements CompoundButton.OnCheck
         for (String[] sw : Switches) {
 
             editor.putString("Switch" + i, sw[0]);
-            i++;
+
             if (sw[1].equals("true")) {
                 editor.putString("bool" + i, "true");
 
             } else {
                 editor.putString("bool" + i, "false");
             }
+            i++;
         }
         editor.putInt("Aantal", i);
 
@@ -227,7 +228,7 @@ public class MainFragment extends ListFragment implements CompoundButton.OnCheck
 
 
      //   lijstje = new ArrayList<>();
-        if (lijstje.size() != 0) {
+       // if (lijstje.size() != 0) {
 
 
             for (int ii = 0; ii < aantasl; ii++) {
@@ -243,9 +244,7 @@ public class MainFragment extends ListFragment implements CompoundButton.OnCheck
                     lijstje.add(marray);
                 }
                 //  Lijstje.clear();
-            }}
-        //TODO: HIER ADAPTER
-
+            }//}
 
             inadap = new ArrayList<>(); // zeker maken dat hij leeg is
 
@@ -316,15 +315,24 @@ inadap.add(y);
         super.onActivityCreated(savedInstanceState);
         madapter = new MainAdapter(getActivity(), R.layout.row_main, null, new String[]{Contract.COLUMN_SPORTCENTRA_SPORT}, new int[]{R.id.txtSoortSp}, 0);
         setListAdapter(madapter);
-        getLoaderManager().initLoader(0, null, this);
-        progress = ProgressDialog.show(getActivity(), "Even geduld",
-                "Bezig met het ophalen van data", true);
+
+        SharedPreferences prefs = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        int aantasl = prefs.getInt("Aantallijst", 0);
+        if(aantasl==0) {
+            getLoaderManager().initLoader(0, null, this);
+            progress = ProgressDialog.show(getActivity(), "Even geduld",
+                    "Bezig met het ophalen van data", true);
+        }
 
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+       /* SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("Aantallijst", 0);
+        editor.commit();*/
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
