@@ -64,7 +64,23 @@ public class DetailFragment extends Fragment {
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("SportNaam", ARG_PARAM1);
         int i = 0;
+
+
         for (String[] sw : filter) {
+
+            editor.putString("Switch" + i, sw[0]);
+
+            if (sw[1].equals("true")) {
+                editor.putString("bool" + i, "true");
+
+            } else {
+                editor.putString("bool" + i, "false");
+            }
+            i++;
+        }
+        editor.putInt("Aantalswitch", i);
+
+       /* for (String[] sw : filter) {
             if (sw[1].equals("true")) {
 
                 editor.putString("Switch" + i, sw[0]);
@@ -72,7 +88,7 @@ public class DetailFragment extends Fragment {
             }
         }
         editor.putInt("Aantalswitch", i);
-
+*/
 
         editor.commit();
         super.onStop();
@@ -93,8 +109,40 @@ public class DetailFragment extends Fragment {
             //Aantalswitch
             // String swh = prefs.getString("Aantalswitch", "");
 
-            for (int ii = 0; ii < lia; ii++) {
-                String sw = prefs.getString("Switch" + ii, "");
+           // for (int ii = 0; ii < lia; ii++) {
+               ///
+                for (int ii = 0; ii < lia; ii++) {
+                    String sw = prefs.getString("Switch" + ii, "");
+                    String[] a = new String[2];
+                    a[0] = sw;
+                    if (prefs.getString("bool" + ii, "").equals("true")) {
+                        a[1] = "true";
+
+                    } else {
+                        a[1] = "false";
+                    }
+
+                    int gggg = 0;
+                    //controle of het er al inzit
+                    for (String[] t : filter) {
+                        if (t[0].equals(a[0])) {
+                            gggg = 1;
+                            // t[1] = "true";
+                        }
+                    }
+                    if (gggg == 0) {
+                        if (a[0] != "") {
+                            filter.add(a);
+                        }
+                    }
+
+                }
+            }
+
+
+            ///
+
+              /*  String sw = prefs.getString("Switch" + ii, "");
 
                 //TODO: hier kijken naar sw2 ofdat true
                 if (!sw.equals("")) {
@@ -103,8 +151,8 @@ public class DetailFragment extends Fragment {
                     a[1] = "true";
                     filter.add(a);
                 }
-            }
-        }
+            }*/
+        //}
         if (ARG_PARAM1.equals("param1") || ARG_PARAM1.equals("")) {
             ARG_PARAM1 = prefs.getString("SportNaam", "");
         }

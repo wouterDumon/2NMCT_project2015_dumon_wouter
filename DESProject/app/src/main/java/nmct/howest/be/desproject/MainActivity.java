@@ -104,7 +104,7 @@ public class MainActivity extends FragmentActivity implements MainFragment.OnFra
                 editor.putString("lijst" + i, str.toString());
                 i++;
             }
-            editor.putInt("Aantallijst", i);
+            editor.putInt("Aantallijst", 52);
             editor.commit();
         }
     }
